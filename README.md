@@ -28,5 +28,5 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 
 As shown in Stream Overview
 
-- Getting **check-ins** shared in Twitter or the lastest check-ins week shared.
+- Getting **check-ins** shared in Twitter or the check ins of the last week.
     -  If you have a Foursquare credential you will be able to track data from specific locations and others. 

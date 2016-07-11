@@ -8,7 +8,6 @@ setup( name='TwitterSwarm4Square-DataMining',
 	author_email='josiel.wirlino@gmail.com',
 	license='GNU',
 	packages=['TwitterSwarm4Square-DataMining'],
-	install_requires=['tweepy',
-					  ],
+	install_requires=['tweepy',],
 	zip_safe=False
 	)
