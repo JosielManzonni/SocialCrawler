@@ -1,4 +1,4 @@
-from setuptools import setuptools
+from setuptools import setup
 
 setup( name='TwitterSwarm4Square-DataMining',
 	version='0.1',
@@ -7,7 +7,7 @@ setup( name='TwitterSwarm4Square-DataMining',
 	author='J.Wirlino',
 	author_email='josiel.wirlino@gmail.com',
 	license='GNU',
-	packages=['twesquarearm'],
+	packages=['TwitterSwarm4Square-DataMining'],
 	install_requires=['tweepy',
 					  ],
 	zip_safe=False
