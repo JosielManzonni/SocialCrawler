@@ -11,7 +11,7 @@ __pycache__/
 *.so
 
 # Ignore Publishing folder created
-TwitterSwarm4Square_DataMining.egg-info/
+SocialCrawler.egg-info/
 
 # Distribution / packaging
 env/
