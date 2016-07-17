@@ -1,4 +1,4 @@
-# TwitterSwarm4Square-DataMining
+# SocialCrawler
 It is a python package to help get data from Twitter, Foursquare.
 
 This package was created to facilitate the data mining from Twitter and Foursquare.
@@ -7,9 +7,10 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 
 #### Requeriments
 
- - Python4
+ - Python 3.4
  - Foursquare developer  credentials ( if you thing in work with)
  - Twitter developer credentials ( if you thing in work with )
+ - Facebook developer credentials (Optional)
 
 #### Possibility
 
