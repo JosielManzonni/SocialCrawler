@@ -4,6 +4,7 @@
 # Date July 15th 2016
 # https://github.com/JosielWirlino/SocialCrawler
 from termcolor import colored
+import tweepy
 import sys
 '''    
 Class responsible in get data from 4Square from a checking data or
@@ -19,25 +20,25 @@ class Collector:
 
 	@param api_key
 	@param api_secret
-	@acess_token
-	@acess_secret
+	@access_token
+	@access_secret
 	'''
-	def __init__(self, api_key=None, api_secret=None, acess_token=None, acess_secret=None):
+	def __init__(self, api_key=None, api_secret=None, access_token=None, access_secret=None):
 		
-		if( api_key is  None or api_secret is  None or acess_token is  None or acess_secret is  None ):
+		if( api_key is  None or api_secret is  None or access_token is  None or access_secret is  None ):
 			print colored('Error: Any parameter can not be None','red')
 
 
 		#setting all parameters
 		self.api_key = api_key
 		self.api_secret = api_secret
-		self.acess_token = acess_token
-		self.acess_secret = acess_secret
+		self.access_token = access_token
+		self.access_secret = access_secret
 
 		#requesting authentication
 
 		self.auth = tweepy.OAuthHandler(self.api_key, self.api_secret)
-		self.auth.set_acess_token(self.acess_token,self.acess_secret)
+		self.auth.set_access_token(self.access_token,self.access_secret)
 		self.twitter = tweepy.API(self.auth)
 
 
@@ -59,14 +60,14 @@ class Collector:
 					   city=None, geocode=None, save_path = None,
 					   result_limits='infinite', mode='items'):
 		if( query is None or since is  None or until is None or save_path is None):
-			print colored('Error: query, since, until, and save_path parameters can not be None','red')
+			print colored('Error: query, since, and until parameters can not be None','red')
 			sys.exit()
 		
 		try:
 			if( city is not None ):
-				log_file = open(save_path+'/log_from_'+city.replace(" ","")+since+'__'+until+'.tsv','a',encoding='utf8')
+				log_file = open(save_path+'log_from_'+city.replace(" ","")+since+'__'+until+'.tsv','a',encoding='utf8')
 			else:
-				log_file = open(save_path+'/log_'+since+'__'+until+'.tsv','a',encoding='utf8')
+				log_file = open(save_path+'log_'+since+'__'+until+'.tsv','a',encoding='utf8')
 		except IOError:
 			print colored('Cound not open file!')
 		#check if the query is about a specific city	
@@ -92,7 +93,7 @@ class Collector:
 				results = tweepy.Cursor(self.twitter.search,
 									q=query,
 									since=since,
-									until=until,created_at,'red')
+									until=until,
 									geocode=geocode).pages
 		while True:
 			try:
