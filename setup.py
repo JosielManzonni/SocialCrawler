@@ -7,7 +7,7 @@
 from setuptools import setup
 
 setup( name='SocialCrawler',
-	version='0.2',
+	version='0.0.2',
 	description='This package allow get data from Twitter, Swarm and Foursquare',
 	url='http://github.com/JosielWirlino/SocialCrawler',
 	author='J.Wirlino and A. Adativa',
