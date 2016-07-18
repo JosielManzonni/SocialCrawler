@@ -7,7 +7,7 @@
 from setuptools import setup
 
 setup( name='SocialCrawler',
-	version='0.1',
+	version='0.2',
 	description='This package allow get data from Twitter, Swarm and Foursquare',
 	url='http://github.com/JosielWirlino/TwitterSwarm4Square-DataMining',
 	author='J.Wirlino',
@@ -17,6 +17,6 @@ setup( name='SocialCrawler',
 	install_requires=['tweepy',
 					  'requests',
 					  'termcolor',
-					  'requests'],
+					  'requests>=2.4.3'],
 	zip_safe=False
 	)
