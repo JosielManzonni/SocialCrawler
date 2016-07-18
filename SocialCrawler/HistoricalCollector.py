@@ -26,7 +26,7 @@ class Collector:
 	def __init__(self, api_key=None, api_secret=None, access_token=None, access_secret=None):
 		
 		if( api_key is  None or api_secret is  None or access_token is  None or access_secret is  None ):
-			print colored('Error: Any parameter can not be None','red')
+			print (colored('Error: Any parameter can not be None','red'))
 
 
 		#setting all parameters
@@ -59,8 +59,8 @@ class Collector:
 	def getStoredData( self, query=None, since=None, until=None, 
 					   city=None, geocode=None, save_path = None,
 					   result_limits='infinite', mode='items'):
-		if( query is None or since is  None or until is None or save_path is None):
-			print colored('Error: query, since, and until parameters can not be None','red')
+		if( query is None or since is None or until is None or save_path is None):
+			print (colored('Error: query, since, until, and save_path parameters can not be None','red'))
 			sys.exit()
 		
 		try:
@@ -100,8 +100,8 @@ class Collector:
 				tweet = results.next()
 				self.stored_data_count+=1
 
-				print colored(self.tweet_count,'red') , colored(city,'green'), colored(tweet.created_at,'red'), tweet.text
-				print '\n'
+				print (colored(self.tweet_count,'red') , colored(city,'green'), colored(tweet.created_at,'red'), tweet.text)
+				print ('\n')
 
 				log_file.write(str(self.stored_data_count)+'\t' + str(tweet.user.id)+ '\t' + str(city) +'\t' + str(tweet.created_at) + '\t' + str(tweet.text.encode('utf-8')) +'\n' )
 			
