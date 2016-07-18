@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 # (c) J.Wirlino
 # Date July 15th 2016
-# https://github.com/JosielWirlino/TwitterSwarm4Square-DataMining
+# https://github.com/JosielWirlino/SocialCrawler
 
 from setuptools import setup
 
@@ -14,6 +14,8 @@ setup( name='SocialCrawler',
 	author_email='josiel.wirlino@gmail.com',
 	license='GNU',
 	packages=['SocialCrawler'],
-	install_requires=['tweepy','requests'],
+	install_requires=['tweepy',
+					  'requests',
+					  'termcolor'],
 	zip_safe=False
 	)
