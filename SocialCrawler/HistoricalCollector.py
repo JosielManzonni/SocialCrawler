@@ -5,6 +5,7 @@
 # https://github.com/JosielWirlino/SocialCrawler
 from termcolor import colored
 import tweepy
+import json
 import sys
 '''    
 Class responsible in get data from 4Square from a checking data or
@@ -113,3 +114,58 @@ class Collector:
 				continue
 			except StopIteration:
 				break
+	'''
+	Get almost real-time tweets
+	@query
+	@save_path
+	'''
+	def getStreamData(self, query=None,save_path=None):
+		if( save_path is None):
+			print(colored('Error: You must define save_path','red'))
+			sys.exit()
+
+		self.listenerHanlder = StreamListenerHandler(save_path)
+		self.streamData = tweepy.Stream(self.auth,self.listenerHanlder)
+		self.streamData.filter(track=query)
+		
+
+
+##Method use only Stream Mode
+class StreamListenerHandler(tweepy.StreamListener):
+	
+	def __init__(self,save_path):
+		self.log_file = open(save_path+'log_.tsv','a',encoding='utf8')
+
+	def on_data(self,data):
+		
+		jsonencoded = json.loads(data)
+
+		# print (' geo '+str(jsonencoded["geo"]))
+		# print (' coord '+str(jsonencoded["coordinates"]))
+		# print (' place country '+str(jsonencoded["place"]["country"]))
+		# print (' place name '+str(jsonencoded["place"]["name"]))
+		#print (data
+
+		#jsonencoded["coordinates"] = self.removeNone(jsonencoded["coordinates"])
+		# jsonencoded["place"]["country"] = self.removeNone(jsonencoded["place"]["country"])
+		# jsonencoded["place"]["name"] = self.removeNone(jsonencoded["place"]["name"])
+		print (jsonencoded["created_at"] , str(jsonencoded["user"]["id"]), jsonencoded["id_str"], jsonencoded["user"]["name"])
+		
+		# print( jsonencoded["created_at"],'\t' , jsonencoded["user"]["id"], '\t' , 
+									 # jsonencoded["user"]["lang"] ,'\t' , jsonencoded["geo"] , 
+									 # '\t' , jsonencoded["text"].encode('utf-8') ,'\t' , jsonencoded["coordinates"])
+
+		self.log_file.write( (jsonencoded["created_at"])+'\t' + str(jsonencoded["user"]["id"])+ '\t' + 
+							 (jsonencoded["user"]["lang"]) +'\t' + (jsonencoded["text"]) + '\t' +
+							 str(jsonencoded["id_str"])+ '\t' + str(jsonencoded["user"]["screen_name"]) +'\t'+ str(jsonencoded["user"]["name"]) +'\n')
+		return True
+	
+	def on_error(self,status):
+		print( colored(status),'red')
+
+	def removeNone(self, var):
+		try:
+			var = var + "1"
+		except (AttributeError, ValueError,TypeError):
+			print ( colored('NoneType detected','red'))
+		
