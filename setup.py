@@ -16,6 +16,7 @@ setup( name='SocialCrawler',
 	packages=['SocialCrawler'],
 	install_requires=['tweepy',
 					  'requests',
-					  'termcolor'],
+					  'termcolor',
+					  'requests'],
 	zip_safe=False
 	)
