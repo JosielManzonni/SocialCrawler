@@ -3,6 +3,7 @@
 # (c) J.Wirlino
 # Date July 15th 2016
 # https://github.com/JosielWirlino/SocialCrawler
-import HistoricalCollector
-import tweepy
+from  . import HistoricalCollector
 import time
+
+__all__ = [	"HistoricalCollector" ]
