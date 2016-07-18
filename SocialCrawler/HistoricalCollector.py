@@ -76,31 +76,31 @@ class Collector:
 				results = tweepy.Cursor(self.twitter.search,
 									q=query,
 									since=since,
-									until=until).items
+									until=until).items()
 			else:
 				results = tweepy.Cursor(self.twitter.search,
 									q=query,
 									since=since,
-									until=until).pages
+									until=until).pages()
 		else:
 			if(mode=='items'):
 				results = tweepy.Cursor(self.twitter.search,
 									q=query,
 									since=since,
 									until=until,
-									geocode=geocode).items
+									geocode=geocode).items()
 			else:
 				results = tweepy.Cursor(self.twitter.search,
 									q=query,
 									since=since,
 									until=until,
-									geocode=geocode).pages
+									geocode=geocode).pages()
 		while True:
 			try:
 				tweet = results.next()
 				self.stored_data_count+=1
 
-				print (colored(self.tweet_count,'red') , colored(city,'green'), colored(tweet.created_at,'red'), tweet.text)
+				print (colored(self.stored_data_count,'red') , colored(city,'green'), colored(tweet.created_at,'red'), tweet.text)
 				print ('\n')
 
 				log_file.write(str(self.stored_data_count)+'\t' + str(tweet.user.id)+ '\t' + str(city) +'\t' + str(tweet.created_at) + '\t' + str(tweet.text.encode('utf-8')) +'\n' )
