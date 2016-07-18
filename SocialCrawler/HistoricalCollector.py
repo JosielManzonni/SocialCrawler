@@ -69,7 +69,7 @@ class Collector:
 			else:
 				log_file = open(save_path+'log_'+since+'__'+until+'.tsv','a',encoding='utf8')
 		except IOError:
-			print colored('Cound not open file!')
+			print (colored('Cound not open file!'))
 		#check if the query is about a specific city	
 		if( city is None ):
 			if(mode=='items'):
@@ -108,7 +108,7 @@ class Collector:
 			#wait 15 minute to search again
 			#https://dev.twitter.com/rest/public/rate-limiting
 			except tweepy.TweepError:
-				print colored('Twitter API rate limit. Wait 15 minutes to request again.\n ','red')
+				print (colored('Twitter API rate limit. Wait 15 minutes to request again.\n ','red'))
 				time.sleep(900)
 				continue
 			except StopIteration:
