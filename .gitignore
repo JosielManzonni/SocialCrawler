@@ -12,13 +12,17 @@ __pycache__/
 
 # Ignore Publishing folder created
 SocialCrawler.egg-info/
+example/Log/
+example/SocialCrawler.egg-info/
+
 
 # Distribution / packaging
 env/
 build/
 develop-eggs/
 dist/
-example/
+
+
 downloads/
 eggs/
 .eggs/
