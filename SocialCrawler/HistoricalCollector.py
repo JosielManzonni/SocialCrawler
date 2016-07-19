@@ -7,6 +7,7 @@ from termcolor import colored
 import tweepy
 import json
 import sys
+import time
 '''    
 Class responsible in get data from 4Square from a checking data or
 4Square dataset of the last week
@@ -102,7 +103,7 @@ class Collector:
 				self.stored_data_count+=1
 
 				print (colored(self.stored_data_count,'red') , colored(city,'green'), colored(tweet.created_at,'red'), tweet.text)
-				print ('\n')
+				# print ('\n')
 
 				log_file.write(str(self.stored_data_count)+'\t' + str(tweet.user.id)+ '\t' + str(city) +'\t' + str(tweet.created_at) + '\t' + str(tweet.text.encode('utf-8')) +'\n' )
 			
