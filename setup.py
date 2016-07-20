@@ -8,15 +8,15 @@ from setuptools import setup
 
 PACKAGE = "SocialCrawler"
 NAME = "SocialCrawler"
-DESCRIPTION = ""
-AUTHOR = 'J.Wirlino and A. Adativa'
-AUTHOR_EMAIL = 'josiel.wirlino@gmail.com, alice.adativa@gmail.com'
-URL = 'http://github.com/JosielWirlino/SocialCrawler'
+DESCRIPTION = "This package allow you get data from Twitter, Swarm(check-ins) and Foursquare"
+AUTHOR = "J.Wirlino and A. Adativa"
+AUTHOR_EMAIL = "josiel.wirlino@gmail.com, alice.adativa@gmail.com"
+URL = "http://github.com/JosielWirlino/SocialCrawler"
 VERSION = __import__(PACKAGE).__version__
 
 setup( name=NAME,
 	version=VERSION,
-	description='This package allow you get data from Twitter, Swarm(check-ins) and Foursquare',
+	description=DESCRIPTION,
 	long_description=read("README.rst"),
 	url=URL,
 	author=AUTHOR
