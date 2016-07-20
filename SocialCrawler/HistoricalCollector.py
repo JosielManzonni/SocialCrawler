@@ -110,11 +110,15 @@ class Collector:
 			#wait 15 minute to search again
 			#https://dev.twitter.com/rest/public/rate-limiting
 			except tweepy.TweepError:
+				print('\n')
 				print (colored('Twitter API rate limit. Wait 15 minutes to request again.\n ','red'))
 				time.sleep(900)
 				continue
 			except StopIteration:
 				break
+		#when arrive in this point self.stored_data must be reseted because
+		#will be a new city information
+		self.stored_data_count = 0 
 	'''
 	Get almost real-time tweets
 	@query
