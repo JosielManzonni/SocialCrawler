@@ -20,8 +20,8 @@ Requeriments
 ^^^^^^^^^^^^
 
 -  Python >= 3.4 ( only one )
--  Foursquare developer credentials ( if you thing in work with)
--  Twitter developer credentials ( if you thing in work with )
+-  Foursquare developer credentials ( if you wanna work with)
+-  Twitter developer credentials ( if you wanna work with )
 -  Facebook developer credentials (Optional)
 
 Get example from .. _Repository: https://github.com/JosielWirlino/SocialCrawler/

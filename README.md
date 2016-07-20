@@ -14,8 +14,8 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 #### Requeriments
 
  - Python >= 3.4  ( only one )
- - Foursquare developer  credentials ( if you thing in work with)
- - Twitter developer credentials ( if you thing in work with )
+ - Foursquare developer  credentials ( if you wanna work with)
+ - Twitter developer credentials ( if you wanna work with )
  - Facebook developer credentials (Optional)
 
 #### Possibility
