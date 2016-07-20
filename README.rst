@@ -1,12 +1,3 @@
-
-Try pandoc!
-
-pandoc --from markdown --to rst
-
-  from
-
-to
-
 SocialCrawler
 =============
 
@@ -33,36 +24,4 @@ Requeriments
 -  Twitter developer credentials ( if you thing in work with )
 -  Facebook developer credentials (Optional)
 
-Possibility
-^^^^^^^^^^^
-
--  As the package use tweepy as framework to connect with Twitter we can
-   use `Twitter Stream API`_. Therefore you can search based in :
-
-   -  delimited
-   -  stall\_warnings
-   -  filter\_level
-   -  language
-   -  follow
-   -  track
-   -  locations
-   -  count
-   -  with
-   -  replies
-   -  stringift\_friend\_id
-
-As shown in Stream Overview
-
--  Getting **check-ins** shared in Twitter or the check ins of the last
-   week.
-
-   -  If you have a Foursquare credential you will be able to track data
-      from specific locations and others.
-
-See Wiki!
-
-.. _Twitter Stream API: https://dev.twitter.com/streaming/overview
-
-pandoc 1.17.2
-
-© 2013–2015 John MacFarlane
+Get example from .. _Repository: https://github.com/JosielWirlino/SocialCrawler/
