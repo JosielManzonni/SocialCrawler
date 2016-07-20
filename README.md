@@ -13,7 +13,7 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 
 #### Requeriments
 
- - Python 3.4 ( only one )
+ - Python >= 3.4  ( only one )
  - Foursquare developer  credentials ( if you thing in work with)
  - Twitter developer credentials ( if you thing in work with )
  - Facebook developer credentials (Optional)
@@ -37,3 +37,5 @@ As shown in Stream Overview
 
 - Getting **check-ins** shared in Twitter or the check ins of the last week.
     -  If you have a Foursquare credential you will be able to track data from specific locations and others. 
+
+See Wiki!
