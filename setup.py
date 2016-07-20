@@ -14,10 +14,13 @@ AUTHOR_EMAIL = "josiel.wirlino@gmail.com, alice.adativa@gmail.com"
 URL = "http://github.com/JosielWirlino/SocialCrawler"
 VERSION = __import__(PACKAGE).__version__
 
+with open('README.rst') as file:
+	long_description = file.read()
+
 setup( name=NAME,
 	version=VERSION,
 	description=DESCRIPTION,
-	long_description=read("README.rst"),
+	long_description=long_description,
 	url=URL,
 	author=AUTHOR,
 	author_email=AUTHOR_EMAIL,
@@ -30,7 +33,7 @@ setup( name=NAME,
 	classifiers=[
 				'Intended Audience :: Developers',
 				'Intended Audience :: Science/Research',
-				'License :: OSI Approved :: GNU',
+				'License :: OSI Approved :: GNU General Public License (GPL)',
 				'Programming Language :: Python :: 3.4',
 				'Programming Language :: Python :: 3.5',
 				'Topic :: Scientific/Engineering :: Information Analysis'
