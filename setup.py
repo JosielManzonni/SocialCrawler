@@ -6,17 +6,34 @@
 
 from setuptools import setup
 
-setup( name='SocialCrawler',
-	version='0.0.2',
-	description='This package allow get data from Twitter, Swarm and Foursquare',
-	url='http://github.com/JosielWirlino/SocialCrawler',
-	author='J.Wirlino and A. Adativa',
-	author_email='josiel.wirlino@gmail.com, alice.adativa@gmail.com',
+PACKAGE = "SocialCrawler"
+NAME = "SocialCrawler"
+DESCRIPTION = ""
+AUTHOR = 'J.Wirlino and A. Adativa'
+AUTHOR_EMAIL = 'josiel.wirlino@gmail.com, alice.adativa@gmail.com'
+URL = 'http://github.com/JosielWirlino/SocialCrawler'
+VERSION = __import__(PACKAGE).__version__
+
+setup( name=NAME,
+	version=VERSION,
+	description='This package allow you get data from Twitter, Swarm(check-ins) and Foursquare',
+	long_description=read("README.rst"),
+	url=URL,
+	author=AUTHOR
+	author_email=AUTHOR_EMAIL,
 	license='GNU',
-	packages=['SocialCrawler'],
+	packages=[PACKAGE],
 	install_requires=['tweepy',
 					  'requests',
 					  'termcolor',
 					  'requests>=2.4.3'],
+	classifiers=[
+				'Intended Audience :: Developers',
+				'Intended Audience :: Science/Research',
+				'License :: OSI Approved :: GNU',
+				'Programming Language :: Python :: 3.4',
+				'Programming Language :: Python :: 3.5',
+				'Topic :: Scientific/Engineering :: Information Analysis'
+				],
 	zip_safe=False
 	)
