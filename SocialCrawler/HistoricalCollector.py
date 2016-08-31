@@ -29,6 +29,7 @@ class Collector:
 		
 		if( api_key is  None or api_secret is  None or access_token is  None or access_secret is  None ):
 			print (colored('Error: Any parameter can not be None','red'))
+			sys.exit()
 
 
 		#setting all parameters
@@ -111,8 +112,8 @@ class Collector:
 			#https://dev.twitter.com/rest/public/rate-limiting
 			except tweepy.TweepError:
 				print('\n')
-				print (colored('Twitter API rate limit. Wait 15 minutes to request again.\n ','red'))
-				time.sleep(900)
+				print (colored('Twitter API rate limit. Wait 16 minutes to request again.\n ','red'))
+				time.sleep(960)
 				continue
 			except StopIteration:
 				break
