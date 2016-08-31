@@ -68,7 +68,7 @@ class Collector:
 		
 		try:
 			if( city is not None ):
-				log_file = open(save_path+'log_from_'+city.replace(" ","")+since+'__'+until+'.tsv','a',encoding='utf8')
+				log_file = open(save_path+'log_from_'+city.replace(" ","")+'__'+since+'__'+until+'.tsv','a',encoding='utf8')
 			else:
 				log_file = open(save_path+'log_'+since+'__'+until+'.tsv','a',encoding='utf8')
 		except IOError:
