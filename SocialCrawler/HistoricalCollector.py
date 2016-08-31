@@ -73,6 +73,7 @@ class Collector:
 				log_file = open(save_path+'log_'+since+'__'+until+'.tsv','a',encoding='utf8')
 		except IOError:
 			print (colored('Cound not open file!'))
+			sys.exit()
 		#check if the query is about a specific city	
 		if( city is None ):
 			if(mode=='items'):
