@@ -29,6 +29,7 @@ class Collector:
 		
 		if( api_key is  None or api_secret is  None or access_token is  None or access_secret is  None ):
 			print (colored('Error: Any parameter can not be None','red'))
+			sys.exit()
 
 
 		#setting all parameters
@@ -67,11 +68,12 @@ class Collector:
 		
 		try:
 			if( city is not None ):
-				log_file = open(save_path+'log_from_'+city.replace(" ","")+since+'__'+until+'.tsv','a',encoding='utf8')
+				log_file = open(save_path+'log_from_'+city.replace(" ","")+'__'+since+'__'+until+'.tsv','a',encoding='utf8')
 			else:
 				log_file = open(save_path+'log_'+since+'__'+until+'.tsv','a',encoding='utf8')
 		except IOError:
 			print (colored('Cound not open file!'))
+			sys.exit()
 		#check if the query is about a specific city	
 		if( city is None ):
 			if(mode=='items'):
@@ -111,8 +113,8 @@ class Collector:
 			#https://dev.twitter.com/rest/public/rate-limiting
 			except tweepy.TweepError:
 				print('\n')
-				print (colored('Twitter API rate limit. Wait 15 minutes to request again.\n ','red'))
-				time.sleep(900)
+				print (colored('Twitter API rate limit. Wait 16 minutes to request again.\n ','red'))
+				time.sleep(960)
 				continue
 			except StopIteration:
 				break

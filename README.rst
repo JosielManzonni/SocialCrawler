@@ -19,7 +19,7 @@ How work ?
 Requeriments
 ^^^^^^^^^^^^
 
--  Python >= 3.4 ( only one )
+-  Python >= 3.4 
 -  Foursquare developer credentials ( if you wanna work with)
 -  Twitter developer credentials ( if you wanna work with )
 -  Facebook developer credentials (Optional)
