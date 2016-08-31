@@ -13,7 +13,7 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 
 #### Requeriments
 
- - Python >= 3.4  ( only one )
+ - Python >= 3.4 
  - Foursquare developer  credentials ( if you wanna work with)
  - Twitter developer credentials ( if you wanna work with )
  - Facebook developer credentials (Optional)
@@ -35,7 +35,24 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 
 As shown in Stream Overview
 
-- Getting **check-ins** shared in Twitter or the check ins of the last week.
+- Getting **check-ins** shared in Twitter or the check-ins of the last week.
     -  If you have a Foursquare credential you will be able to track data from specific locations and others. 
 
-See Wiki!
+**See Wiki!**
+#### Problem related
+
+	We are being noticed about err-info error. We don't know why that is happened, but we are working to fix it.
+	If that happen with you, just do downoad of the packages one by one  in this order  as follow:
+		tweepy
+		termcolor
+		request =>2.4.3
+		SocialCrawler
+	
+Our test was in Ubuntu OS 16.04.1 LTS 64-bit | kernel 4.4.0-34-generic
+#### Release Notes
+
+- **v 0.0.5**
+	- Fixed bug in ***getStoredData*** function that allow some parameter be None
+	- Updated format file name generated 
+	- Increased time wait request from 15 minutos to 16. ( Sometimes when was tried request again -after 15 minutes - the server responded that don't finished the 15 minutes.
+	- Updated the fields saved. Now all field is saved in a file using \tab format as is shown in Wiki.
