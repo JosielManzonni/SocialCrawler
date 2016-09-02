@@ -30,6 +30,7 @@ setup( name=NAME,
 					  'requests',
 					  'termcolor',
 					  'requests>=2.4.3',
+					  'urllib2'
 					  ],
 	classifiers=[
 				'Intended Audience :: Developers',
