@@ -166,7 +166,7 @@ class Collector:
         The tweets that match with query will be saved as json data in a *.tsv file
         
         Args:
-            query (str) : Keywords that have contain a tweet.
+            query (str) : Keywords or expression that a tweet must has.
             save_path (str) : path to be saved the file generated with json data
 
         """

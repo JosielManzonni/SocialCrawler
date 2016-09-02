@@ -4,7 +4,7 @@
 This modules import all classes from SocialCrawler package.
 
  (c) J.Wirlino and A.Adativa
- Date July 15th 2016
+ Date Sept 1th 2016
  https://github.com/JosielWirlino/SocialCrawler
 
 """
