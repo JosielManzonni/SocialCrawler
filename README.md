@@ -56,7 +56,8 @@ Our test was in Ubuntu OS 16.04.1 LTS 64-bit | kernel 4.4.0-34-generic
 	- Implementaded ExtractorData: a simple way to get data from Foursquare using the swarm url code
 	- Add  HistoricalCollector.CollectorV2 that get all data from json tweet and save as tsv file
     - Add in ExtractorData possibility of use other file (non a created by Collector or CollectorV2 ) to consult
-    Foursquare.
+    Foursquare. (**not available yet**)
+    - added urllib2 as requeriments
 
 
 - **v 0.0.5**
