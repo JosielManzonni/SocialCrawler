@@ -10,7 +10,7 @@
 from termcolor import colored
 import json
 import sys
-import urllib2
+import urllib.request
 import requests
 
 class Extractor:
@@ -172,9 +172,9 @@ class Extractor:
 
                 print("Trying resolve "+t_co_url)
 
-                swarm_resolved_url =  urllib2.urlopen( t_co_url ) # try resolve swarm short url 
+                swarm_resolved_url =  urllib.request.urlopen( t_co_url ) # try resolve swarm short url 
             
-            except urllib2.HTTPError as e:
+            except urllib.HTTPError as e:
                 print(colored('URLLIB2 URLOPEN FAILED ERROR CODE %s' %e.code,'red'))
                 continue
             
