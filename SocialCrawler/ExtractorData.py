@@ -191,19 +191,19 @@ class Extractor:
             try:
 
                 response = requests.get( url_resolveID + key + 
-                                      '&client_id=' + self.foursquare_client_id +
-                                      '&client_secret=' + self.foursquare_client_secret +
-                                      '&v=' + self.foursquare_version +
-                                      '&m=' + self.foursquare_mode )
+                                      '&client_id=' + self._foursquare_client_id +
+                                      '&client_secret=' + self._foursquare_client_secret +
+                                      '&v=' + self._foursquare_version +
+                                      '&m=' + self._foursquare_mode )
 
                 swarm_4square_data = response.json()
                 
                 v_id = swarm_4square_data['response']['checkin']['venue']['id']
 
                 venue_request = self.requests.get( url_venue + v_id +
-                                                  '?client_id=' + self.foursquare_client_id +
-                                                  '&client_secret=' + self.foursquare_client_secret +
-                                                  '&v=' + self.foursquare_version)
+                                                  '?client_id=' + self._foursquare_client_id +
+                                                  '&client_secret=' + self._foursquare_client_secret +
+                                                  '&v=' + self._foursquare_version)
 
                 venue_data = venue_request.json()
                 
