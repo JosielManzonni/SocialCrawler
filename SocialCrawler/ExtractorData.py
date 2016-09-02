@@ -170,6 +170,8 @@ class Extractor:
 
                 t_co_url = t_co_url[ idx : idx+23 ] #get all t.co url
 
+                print("Trying resolve "+t_co_url)
+
                 swarm_resolved_url =  urllib2.urlopen( t_co_url ) # try resolve swarm short url 
             
             except urllib2.HTTPError as e:
@@ -178,13 +180,17 @@ class Extractor:
             
             except ValueError as e:
                 print(colored(' SWARM SHORT URL ERROR ','red'))
+                continue
             
             except :
                 print(colored(' URLLIB2 EROR','red'))
+                continue
 
             if swarm_prefix not in swarm_resolved_url.url: #if do not have swarm key code
                 print(colored('SWARM URL ERROR','red') )
                 continue
+
+            print(" resolved sucessfully. Link resolved is "+swarm_resolved_url.url )
 
             key =  swarm_resolved_url.url[ len(swarm_resolved_url.url) - 11 : ] #get string after www.swarmapp.com/
             
