@@ -181,7 +181,7 @@ class Extractor:
                 swarm_resolved_url =  urllib.request.urlopen( t_co_url ) # try resolve swarm short url 
             
             except HTTPError as e:
-                print(colored('URLLIB2 URLOPEN FAILED ERROR CODE %s' %e.code,'red'))
+                print(colored('URLLIB URLOPEN FAILED ERROR CODE %s' %e.code,'red'))
                 continue
             
             except ValueError as e:
@@ -232,6 +232,10 @@ class Extractor:
                 swarm_4square_data = response.json()
                 
 
+            except HTTPError as e:
+                print(colored('HTTPERROR ','red'))
+                print(colored(e,'red'))
+                continue
             except :
                 print(colored('FOURSQUARE REQUESTS GET ERROR ','red'))
                 continue
@@ -244,6 +248,11 @@ class Extractor:
                                                   '&v=' + self._foursquare_version)
 
                 venue_data = venue_request.json()
+            except HTTPError as e:
+                print(colored('HTTPERROR ','red'))
+                print(colored(e,'red'))
+                continue
+
             except :
                 print(colored('VENUE REQUESTS GET ERROR ','red'))
                 continue    
@@ -273,7 +282,7 @@ class Extractor:
                 print(colored('SWARM CHECKIN ERROR [PARSER USER_GENDER]','red'))
                 continue
 
-            print("Foursquare and Venue requests sucess.")
+            print("Foursquare and Venue requests success.")
             print("Saving Foursquare data.")
             __out.write( str(checkin_id) + \
                         '\t' + str(checkin_createdAt) \
@@ -332,7 +341,7 @@ class Extractor:
                         + str(stats_checkins_count) \
                         + '\t' + str(stats_user_count) \
                         + '\n')
-            break
+            # break
         __out.close()
 
 
