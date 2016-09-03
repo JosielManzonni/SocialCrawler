@@ -40,7 +40,14 @@ As shown in Stream Overview
 
 **See Wiki!**
 
- -->
+- **v 0.0.7**
+    - Added new except treatments 
+    - separeted foursquare request and venue request in two try-except blocks
+    - fixed write categorie_id bug, missing int to str convert
+    - **yet** in ExtractorData possibility of use other file (non a created by Collector or CollectorV2 ) to consult
+    Foursquare. (**not available yet**)
+    
+
 - **v 0.0.6**
 	- Formatted to PEP257 and PEP8 (almost)
 	- Implementaded ExtractorData: a simple way to get data from Foursquare using the swarm url code
