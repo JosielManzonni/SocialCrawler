@@ -88,7 +88,7 @@ class Extractor:
     # 	"""folder where the file will be saved."""
     # 	return self._path_file
     
-    def settings(self,mode=None,out_file_name=None,out_path_file=None,column=3,input_file=None):
+    def settings(self,mode=None,out_file_name=None,out_path_file=None,column=4,input_file=None):
         """Class constructor.
 
         Method to read log file created by Collector class
@@ -123,7 +123,7 @@ class Extractor:
         self._path_file = out_path_file
         self._mode = mode
         self._input_file = input_file
-
+        self._column = column
         if(mode == "v2"):
             if(column is None ):
                 print(colored("When mode is v2, column field must be assigned",'red'))
@@ -139,7 +139,7 @@ class Extractor:
         resolvedId is a function from Foursquare API Endpoints to get data from a swarm url code.
         see https://developer.foursquare.com/docs/
         """
-        swarm_prefix = "https://swarmapp.com/c/"
+        swarm_prefix = "https://www.swarmapp.com/c/"
         url_venue = 'https://api.foursquare.com/v2/venues/'
         url_resolveID = 'https://api.foursquare.com/v2/checkins/resolve?shortId='
 
@@ -147,7 +147,7 @@ class Extractor:
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'))
             sys.exit()
 
-        __out = open( self._path_file + '/' + self._file_name + '.tsv','w')
+        __out = open( self._path_file + '/' + self._file_name + '.tsv','a')
         
         #set header
         __out.write( 'checkin_id' \
@@ -164,7 +164,10 @@ class Extractor:
                     +'\n')
 
         for line in open( self._input_file,'r'): #read each line from input file
+            
             line_split = line.split('\t')
+            
+            # print(line + "URL T.CO " + line_split[self._column])
             try:
             
                 t_co_url = line_split[self._column] #get tweet text
@@ -206,14 +209,15 @@ class Extractor:
                 print(e)
                 continue
             except :
-                print(colored(' URLLIB EROR','red'))
+                print(colored(' URLLIB ERROR','red'))
                 continue
 
             if swarm_prefix not in swarm_resolved_url.url: #if do not have swarm key code
+                print(swarm_resolved_url.url)
                 print(colored('SWARM URL ERROR','red') )
                 continue
 
-            print(" resolved sucessfully. Link resolved is "+swarm_resolved_url.url )
+            print("resolved sucessfully. Link resolved is "+swarm_resolved_url.url )
 
             key =  swarm_resolved_url.url[ len(swarm_resolved_url.url) - 11 : ] #get string after www.swarmapp.com/
             
@@ -227,19 +231,23 @@ class Extractor:
 
                 swarm_4square_data = response.json()
                 
-                v_id = swarm_4square_data['response']['checkin']['venue']['id']
 
-                venue_request = self.requests.get( url_venue + v_id +
+            except :
+                print(colored('FOURSQUARE REQUESTS GET ERROR ','red'))
+                continue
+
+            try:
+                v_id = swarm_4square_data['response']['checkin']['venue']['id']
+                venue_request = requests.get( url_venue + v_id +
                                                   '?client_id=' + self._foursquare_client_id +
                                                   '&client_secret=' + self._foursquare_client_secret +
                                                   '&v=' + self._foursquare_version)
 
                 venue_data = venue_request.json()
-                
-                # if( swarm_4square_data['meta']['code'] == "200"): #data yet available in foursquare dataset
             except :
-                print(colored('REQUESTS GET ERROR ','red'))
-                continue
+                print(colored('VENUE REQUESTS GET ERROR ','red'))
+                continue    
+                # if( swarm_4square_data['meta']['code'] == "200"): #data yet available in foursquare dataset
 
             try:
                 checkin_id = swarm_4square_data['response']['checkin']['id']
@@ -265,12 +273,13 @@ class Extractor:
                 print(colored('SWARM CHECKIN ERROR [PARSER USER_GENDER]','red'))
                 continue
 
-            __out.write( checkin_id + \
-                        '\t' + checkin_createdAt \
-                        + '\t' + user_id + '\t' \
+            print("Foursquare and Venue requests sucess.")
+            print("Saving Foursquare data.")
+            __out.write( str(checkin_id) + \
+                        '\t' + str(checkin_createdAt) \
+                        + '\t' + str(user_id) + '\t' \
                         + user_gender \
-                        + '\t' + key \
-                        + '\t' )
+                        + '\t' + key + '\t' )
             # write data about user
 
             try:
@@ -314,14 +323,16 @@ class Extractor:
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_STATS_USERSCOUNT]','red'))
                 continue
-
-            __out.write( venue_id \
-                        + '\t' + venue_lat + ',' + venue_lng \
-                        + '\t' + categorie_id + '\t' \
+            
+            print("Saving Venue data.")
+            __out.write( str(venue_id) \
+                        + '\t' + str(venue_lat) + ',' + str(venue_lng) \
+                        + '\t' + str(categorie_id) + '\t' \
                         + categorie_name + '\t' \
-                        + stats_checkins_count \
-                        + '\t' + stats_user_count \
+                        + str(stats_checkins_count) \
+                        + '\t' + str(stats_user_count) \
                         + '\n')
+            break
         __out.close()
 
 
