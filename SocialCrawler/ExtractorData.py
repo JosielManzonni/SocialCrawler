@@ -11,6 +11,9 @@ from termcolor import colored
 # import json
 import sys
 import urllib.request
+from urllib.error import URLError
+from pip._vendor.requests.exceptions import HTTPError
+
 import requests
 
 class Extractor:
@@ -174,16 +177,36 @@ class Extractor:
 
                 swarm_resolved_url =  urllib.request.urlopen( t_co_url ) # try resolve swarm short url 
             
-            except urllib.HTTPError as e:
+            except HTTPError as e:
                 print(colored('URLLIB2 URLOPEN FAILED ERROR CODE %s' %e.code,'red'))
                 continue
             
             except ValueError as e:
                 print(colored(' SWARM SHORT URL ERROR ','red'))
+                print(e)
                 continue
-            
+            except URLError as e:
+                print(colored(' URL ERROR ','red'))
+                print(e)
+                continue
+            except ConnectionResetError as e:
+                print(colored(' CONNECTION RESET ERROR ','red'))
+                print(e)
+                continue
+            except ConnectionError as e:
+                print(colored(' CONNECTION ERROR ','red'))
+                print(e)
+                continue
+            except ConnectionAbortedError as e:
+                print(colored(' CONNECTION ABORTED ERROR ','red'))
+                print(e)
+                continue
+            except ConnectionRefusedError as e:
+                print(colored(' CONNECTION REFUSED ERROR ','red'))
+                print(e)
+                continue
             except :
-                print(colored(' URLLIB2 EROR','red'))
+                print(colored(' URLLIB EROR','red'))
                 continue
 
             if swarm_prefix not in swarm_resolved_url.url: #if do not have swarm key code
