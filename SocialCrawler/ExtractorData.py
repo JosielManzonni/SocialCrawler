@@ -8,7 +8,7 @@
 """
 
 from termcolor import colored
-import json
+# import json
 import sys
 import urllib.request
 import requests
@@ -70,20 +70,20 @@ class Extractor:
         self._foursquare_version = foursquare_version
         self._foursquare_mode = foursquare_mode
 
-    @property
-    def file_name(self):
-        """File name that will be used to save the file created when run."""
-        return self._file_name
+    # @property
+    # def file_name(self):
+    #     """File name that will be used to save the file created when run."""
+    #     return self._file_name
     
-    @property
-    def mode(self):
-    	"""Mode that class was setted."""
-    	return self._mode
+    # @property
+    # def mode(self):
+    # 	"""Mode that class was setted."""
+    # 	return self._mode
     
-    @property
-    def path_file(self):
-    	"""folder where the file will be saved."""
-    	return self._path_file
+    # @property
+    # def path_file(self):
+    # 	"""folder where the file will be saved."""
+    # 	return self._path_file
     
     def settings(self,mode=None,out_file_name=None,out_path_file=None,column=3,input_file=None):
         """Class constructor.
@@ -144,20 +144,20 @@ class Extractor:
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'))
             sys.exit()
 
-        __out = open( self._path_file + '/' + self._file_name + '.tsv' )
+        __out = open( self._path_file + '/' + self._file_name + '.tsv','w')
         
         #set header
-        __out.write( 'checkin_id' 
-                    + '\t' + 'checkin_createdAt' 
-                    + '\t' + 'user_id' 
-                    + '\t' + 'user_gender' 
-                    + '\t' + 'swarm_key'
-                    + '\t' + 'venue_id'
-                    + '\t' + 'venue_coord'
-                    + '\t' + 'venue_categories_id'
-                    + '\t' + 'venue_categories_name'
-                    + '\t' + 'venue_stats_checkinsCount'
-                    + '\t' + 'venue_stats_userCount'
+        __out.write( 'checkin_id' \
+                    + '\t' + 'checkin_createdAt' \
+                    + '\t' + 'user_id' \
+                    + '\t' + 'user_gender' \
+                    + '\t' + 'swarm_key' \
+                    + '\t' + 'venue_id' \
+                    + '\t' + 'venue_coord' \
+                    + '\t' + 'venue_categories_id' \
+                    + '\t' + 'venue_categories_name' \
+                    + '\t' + 'venue_stats_checkinsCount' \
+                    + '\t' + 'venue_stats_userCount' \
                     +'\n')
 
         for line in open( self._input_file,'r'): #read each line from input file
@@ -242,11 +242,13 @@ class Extractor:
                 print(colored('SWARM CHECKIN ERROR [PARSER USER_GENDER]','red'))
                 continue
 
-            __out.write( checkin_id 
-                        + '\t' + checkin_createdAt 
-                        + '\t' + user_id 
-                        + '\t' + user_gender 
-                        + '\t' + key + '\t' ) # write data about user
+            __out.write( checkin_id + \
+                        '\t' + checkin_createdAt \
+                        + '\t' + user_id + '\t' \
+                        + user_gender \
+                        + '\t' + key \
+                        + '\t' )
+            # write data about user
 
             try:
                 venue_id = venue_data['response']['venue']['id']
@@ -290,12 +292,12 @@ class Extractor:
                 print(colored('VENUE ERROR [PARSER VENUE_STATS_USERSCOUNT]','red'))
                 continue
 
-            __out.write( venue_id 
-                        + '\t' + venue_lat + ',' + venue_lng 
-                        + '\t' + categorie_id 
-                        + '\t' + categorie_name 
-                        + '\t' + stats_checkins_count
-                        + '\t' + stats_user_count
+            __out.write( venue_id \
+                        + '\t' + venue_lat + ',' + venue_lng \
+                        + '\t' + categorie_id + '\t' \
+                        + categorie_name + '\t' \
+                        + stats_checkins_count \
+                        + '\t' + stats_user_count \
                         + '\n')
         __out.close()
 
