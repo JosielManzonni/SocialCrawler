@@ -33,6 +33,7 @@ This package was created to facilitate the data mining from Twitter and Foursqua
     -  replies
     -  stringift_friend_id
 
+
 As shown in Stream Overview
 
 - Getting **check-ins** shared in Twitter or the check-ins of the last week.
