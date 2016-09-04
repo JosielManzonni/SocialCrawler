@@ -13,7 +13,7 @@ import sys
 import urllib.request
 from urllib.error import URLError
 from pip._vendor.requests.exceptions import HTTPError
-
+import time
 import requests
 
 class Extractor:
@@ -238,6 +238,13 @@ class Extractor:
                 continue
             except :
                 print(colored('FOURSQUARE REQUESTS GET ERROR ','red'))
+                # hour = time.strftime("%H")
+                # minute = time.strftime("%M")
+                # second = time.strftime("%S")
+                # print(colored('STOP REQUEST IN ' + str(hour+1) + ':' + str(minute+1) + ':' + str(second) , 'red' ) )
+                print(colored('Wait 15 minutes to request again ','red'))
+                time.sleep(960) #sleep 1 hour and 1 minute
+
                 continue
 
             try:
@@ -255,6 +262,15 @@ class Extractor:
 
             except :
                 print(colored('VENUE REQUESTS GET ERROR ','red'))
+                # print(colored('STOP REQUEST IN ' + str(time.strftime("%H:%M:%S"),'red') ) )
+                
+                # hour = time.strftime("%H")
+                # minute = time.strftime("%M")
+                # second = time.strftime("%S")
+                print(colored('Wait one 15 minutes to request again ','red'))
+                # print('Next request '+ str(hour+1) + ':' + str(minute+1) + ':' + str(second))
+                # print(colored('STOP REQUEST IN ' + str(hour+1) + ':' + str(minute+1) + ':' + str(second) , 'red' ) )
+                time.sleep(960) #sleep 15 minutes
                 continue    
                 # if( swarm_4square_data['meta']['code'] == "200"): #data yet available in foursquare dataset
 
@@ -301,36 +317,42 @@ class Extractor:
                 venue_lat = venue_data['response']['venue']['location']['lat']
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_LOCATION_LAT]','red'))
+                __out.write('\n')
                 continue
 
             try:
                 venue_lng = venue_data['response']['venue']['location']['lng']
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_LOCATION_LNG]','red'))
+                __out.write('\n')
                 continue
 
             try:
                 categorie_id = venue_data['response']['venue']['categories'][0]['id']
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_CATEGORIE_ID]','red'))
+                __out.write('\n')
                 continue
 
             try:
                 categorie_name = venue_data['response']['venue']['categories'][0]['name']
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_CATEGORIE_NAME]','red'))
+                __out.write('\n')
                 continue
 
             try:
                 stats_checkins_count = venue_data['response']['venue']['stats']['checkinsCount']
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_STATS_CHECKINSCOUNT]','red'))
+                __out.write('\n')
                 continue
 
             try:
                 stats_user_count = venue_data['response']['venue']['stats']['usersCount']
             except:
                 print(colored('VENUE ERROR [PARSER VENUE_STATS_USERSCOUNT]','red'))
+                __out.write('\n')
                 continue
             
             print("Saving Venue data.")
