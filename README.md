@@ -42,6 +42,7 @@ As shown in Stream Overview
 **See Wiki!**
 
 - **v 0.0.7**
+    - when VENUE or FOURSQUARE get requests error the program thread will wait 15 minutes to request again
     - Added new except treatments 
     - separeted foursquare request and venue request in two try-except blocks
     - fixed write categorie_id bug, missing int to str convert

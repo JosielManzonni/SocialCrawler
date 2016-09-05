@@ -11,7 +11,7 @@ Install (generic way)
 
 .. code:: python
 
-        $ python3.4 -m pip install SocialCrawler
+        $ python3.5 -m pip install SocialCrawler
 
 How work ?
 ----------
@@ -19,7 +19,7 @@ How work ?
 Requeriments
 ^^^^^^^^^^^^
 
--  Python >= 3.4 
+-  Python >= 3.5 
 -  Foursquare developer credentials ( if you wanna work with)
 -  Twitter developer credentials ( if you wanna work with )
 -  Facebook developer credentials (Optional)
