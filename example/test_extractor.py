@@ -9,8 +9,8 @@
 
 from SocialCrawler import ExtractorData
 
-client_id = "GEQQO0MJPKLUTBIZHERRYQJUCTU5W2MGFAHZKCDB3LYB1GZI"
-client_secret = "QMXESMEH1VKEEKUQ0EBXNCJ4IWCK0EYHA0MUHNVBMGSWXRUZ"
+client_id = "--"
+client_secret = "--"
 
 file_name = "log_from_Vitoria2016-08-17__2016-08-22.tsv"
 
