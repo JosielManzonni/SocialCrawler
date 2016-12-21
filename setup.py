@@ -37,6 +37,7 @@ setup( name=NAME,
 				'Intended Audience :: Developers',
 				'Intended Audience :: Science/Research',
 				'License :: OSI Approved :: GNU General Public License (GPL)',
+				'Programming Language :: Python :: 3',
 				'Programming Language :: Python :: 3.4',
 				'Programming Language :: Python :: 3.5',
 				'Topic :: Scientific/Engineering :: Information Analysis'
