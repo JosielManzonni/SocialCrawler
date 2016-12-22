@@ -15,6 +15,11 @@ from . import ExtractorData
 
 # from  . import ExtractorData
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
-__all__ = [	"HistoricalCollector","ExtractorData"]
+__all__ = [	
+			"HistoricalCollector",
+			"ExtractorData",
+			"HackFousquare",
+			"NewExtractorData"
+		]

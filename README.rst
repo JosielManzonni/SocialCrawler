@@ -9,9 +9,9 @@ Foursquare.
 Install (generic way)
 ---------------------
 
-.. code:: python
+.. code:: shell
 
-        $ python3.5 -m pip install SocialCrawler
+        $ python3 -m pip install SocialCrawler
 
 How work ?
 ----------
@@ -19,9 +19,9 @@ How work ?
 Requeriments
 ^^^^^^^^^^^^
 
--  Python >= 3.5 
+-  Python >= 3
+-  setuptools
 -  Foursquare developer credentials ( if you wanna work with)
 -  Twitter developer credentials ( if you wanna work with )
--  Facebook developer credentials (Optional)
 
 Get example from .. _Repository: https://github.com/JosielWirlino/SocialCrawler/
