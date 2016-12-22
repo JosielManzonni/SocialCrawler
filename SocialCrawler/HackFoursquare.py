@@ -21,16 +21,18 @@ class Hacking:
 		self.driver = webdriver.Firefox()
 		login_developer_4square = 'https://foursquare.com/login'
 		
-		login_field = driver.find_element_by_id("username")
-		login_field.clear()
-		login_field.send_keys(developer_email)
+		self.driver.get(login_developer_4square)
 
-		password_field = driver.find_element_by_id("password")
+		login_field = self.driver.find_element_by_id("username")
+		login_field.clear()
+		login_field.send_keys(self.developer_email)
+
+		password_field = self.driver.find_element_by_id("password")
 		password_field.clear()
-		password_field.send_keys(developer_password)
+		password_field.send_keys(self.developer_password)
 
 		#do login
-		driver.find_element_by_id("loginFormButton").click()
+		self.driver.find_element_by_id("loginFormButton").click()
 
 
 
