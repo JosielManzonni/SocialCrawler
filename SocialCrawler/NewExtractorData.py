@@ -8,14 +8,15 @@
 """
 
 from termcolor import colored
-# import json
 import sys
 import urllib.request
 from urllib.error import URLError
 from pip._vendor.requests.exceptions import HTTPError
 import time
 import requests
-from HackFoursquare import Hacking  
+from HackFoursquare import Hacking 
+import json
+
 class NewExtractor:
     """Read log file from Collector .
 
@@ -257,8 +258,8 @@ class NewExtractor:
                 continue
 
             try:
-                v_id = swarm_4square_data['response']['checkin']['venue']['id']
-                venue_request = requests.get( url_venue + v_id +
+                venue_id = swarm_4square_data['response']['checkin']['venue']['id']
+                venue_request = requests.get( url_venue + venue_id +
                                                   '?client_id=' + self._foursquare_client_id +
                                                   '&client_secret=' + self._foursquare_client_secret +
                                                   '&v=' + self._foursquare_version)
@@ -276,7 +277,7 @@ class NewExtractor:
                 # hour = time.strftime("%H")
                 # minute = time.strftime("%M")
                 # second = time.strftime("%S")
-                print(colored('Wait one 15 minutes to request again ','red'))
+                print(colored('[VENUE API] Wait one 15 minutes to request again ','red'))
                 # print('Next request '+ str(hour+1) + ':' + str(minute+1) + ':' + str(second))
                 # print(colored('STOP REQUEST IN ' + str(hour+1) + ':' + str(minute+1) + ':' + str(second) , 'red' ) )
                 time.sleep(960) #sleep 15 minutes
