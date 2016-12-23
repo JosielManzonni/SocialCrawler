@@ -17,7 +17,7 @@ example/Log/
 example/stream_api.py
 example/test_stream_api.py
 example/SocialCrawler.egg-info/
-
+SocialCrawler/test_ned.py
 
 # Distribution / packaging
 env/
