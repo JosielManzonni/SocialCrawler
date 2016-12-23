@@ -17,7 +17,12 @@ This package was created to facilitate the data mining from Twitter and Foursqua
  - setuptools
  - Foursquare developer  credentials ( if you wanna work with)
  - Twitter developer credentials ( if you wanna work with )
+ - geckodriver installed and in $PATH (we got this problem with when try run in Linux Mint and Kali)
+    - Download from https://github.com/mozilla/geckodriver/releases
 
+```shell
+    $ export PATH=$PATH:<geckodriver-path>
+```
 
 #### Possibility
 
