@@ -19,7 +19,8 @@ example/test_stream_api.py
 example/test_*
 example/SocialCrawler.egg-info/
 SocialCrawler/test_ned.py
-*.tsv
+SocialCrawler/test_*
+
 
 # Distribution / packaging
 env/
