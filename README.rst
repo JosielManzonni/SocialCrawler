@@ -24,4 +24,3 @@ Requeriments
 -  Foursquare developer credentials ( if you wanna work with)
 -  Twitter developer credentials ( if you wanna work with )
 
-Get example from .. _Repository: https://github.com/JosielWirlino/SocialCrawler/

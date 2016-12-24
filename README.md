@@ -51,6 +51,7 @@ As shown in Stream Overview
     - added selenium as requirements to use foursquare browser request (to avoid rate limit), **can not work**
     - updated ExtractorData to a full version to allow get (almost) full VENUE info (NewExtractorData)
     - removed urlib2 as requirements
+    - updated run flow, now always we will have return just check if the field is NULL, when this happen it is because the data is missing
     
 
     
