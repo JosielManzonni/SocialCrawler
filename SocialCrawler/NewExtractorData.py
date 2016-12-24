@@ -182,6 +182,7 @@ class NewExtractor:
                     + '\t' + 'venue_lat' \
                     + '\t' + 'venue_lng' \
                     + '\t' + 'venue_categories_id' \
+                    + '\t' + 'venue_categories_name' \
                     + '\t' + 'venue_stats_checkinsCount' \
                     + '\t' + 'venue_stats_userCount' \
                     + '\t' + 'venue_rating' \
@@ -271,24 +272,27 @@ class NewExtractor:
         print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url )
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
 
-        try:
-            response = requests.get( self.url_resolveID + key + 
-                                      '&client_id=' + self._foursquare_client_id +
-                                      '&client_secret=' + self._foursquare_client_secret +
-                                      '&v=' + self._foursquare_version +
-                                      '&m=' + self._foursquare_mode )
+        api_rate_limit = True
+        while api_rate_limit
+            try:
+                response = requests.get( self.url_resolveID + key + 
+                                          '&client_id=' + self._foursquare_client_id +
+                                          '&client_secret=' + self._foursquare_client_secret +
+                                          '&v=' + self._foursquare_version +
+                                          '&m=' + self._foursquare_mode )
 
-            swarm_data = response.json()
-
-        except HTTPError as e:
-            # print(colored('HTTPERROR ','red'))
-            print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'))
-            print(colored(e,'red'))
-            
-        except :
-            print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'))
-            print(colored('Wait 15 minutes to request again ','red'))
-            time.sleep(960) #sleep 1 hour and 1 minute
+                swarm_data = response.json()
+                api_rate_limit = False
+            except HTTPError as e:
+                # print(colored('HTTPERROR ','red'))
+                print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'))
+                print(colored(e,'red'))
+                
+            except :
+                print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'))
+                print(colored('Wait 15 minutes to request again ','red'))
+                time.sleep(960) #sleep 1 hour and 1 minute
+                api_rate_limit = True
 
         try:
             checkin_user_id=swarm_data['response']['checkin']['user']['id']
@@ -323,34 +327,39 @@ class NewExtractor:
         Returns:
             TYPE: Description
         """
-        try:
-            response = requests.get(self.url_venue \
-                                    + venue_id \
-                                    + '?client_id=' \
-                                    + self._foursquare_client_id \
-                                    + '&client_secret=' \
-                                    + self._foursquare_client_secret \
-                                    + '&v=' \
-                                    + self._foursquare_version \
-                                    )
-            venue_data = response.json()
-        except HTTPError as e:
-            print(colored('[HTTP ERROR] VENUE DETAIL ','red'))
-            print(colored(e,'red'))
-            return False
-        except :
-            print(colored('[VENUE DETAIL] RATE LIMIT','red'))
-            
-            
-            if self.hacking_enable:
-                print(colored('STARTING HACKING BROWSER','green'))
-                response = self._hacking.get_venue_detail(venue_id)
-                venue_data = json.loads(response)
-            else:
-                print(colored('Wait one 15 minutes to request again ','red'))
-                time.sleep(960) #sleep 15 minutes
+        api_venue_rate_limit = True
+        while api_venue_rate_limit:
+            try:
+                response = requests.get(self.url_venue \
+                                        + venue_id \
+                                        + '?client_id=' \
+                                        + self._foursquare_client_id \
+                                        + '&client_secret=' \
+                                        + self._foursquare_client_secret \
+                                        + '&v=' \
+                                        + self._foursquare_version \
+                                        )
+                venue_data = response.json()
+                api_venue_rate_limit = False
 
-            return False
+            except HTTPError as e:
+                print(colored('[HTTP ERROR] VENUE DETAIL ','red'))
+                print(colored(e,'red'))
+                # return False
+            except :
+                print(colored('[VENUE DETAIL] RATE LIMIT','red'))
+                if self.hacking_enable:
+                    print(colored('STARTING HACKING BROWSER','green'))
+                    response = self._hacking.get_venue_detail(venue_id)
+                    venue_data = json.loads(response)
+                    api_venue_rate_limit =  False
+
+                else:
+                    print(colored('Wait one 15 minutes to request again ','red'))
+                    time.sleep(960) #sleep 15 minutes
+                    api_venue_rate_limit =  True
+
+                # return False
 
 
         try:
@@ -367,6 +376,11 @@ class NewExtractor:
             venue_categories_id = venue_data['response']['venue']['categories'][0]['id']
         except:
             venue_categories_id = "NULL"
+
+        try:
+            venue_categories_name = venue_data['response']['venue']['categories'][0]['name']
+        except:
+            venue_categories_name = "NULL"
 
         try:
             venue_stats_checkinsCount = venue_data['response']['venue']['stats']['checkinsCount']
@@ -397,6 +411,7 @@ class NewExtractor:
                     +"\t"+str(venue_lat) \
                     +"\t"+str(venue_lng) \
                     +"\t"+str(venue_categories_id) \
+                    +"\t"+str(venue_categories_name) \
                     +"\t"+str(venue_stats_checkinsCount) \
                     +"\t"+str(venue_stats_users_counts) \
                     +"\t"+str(venue_rating) \
