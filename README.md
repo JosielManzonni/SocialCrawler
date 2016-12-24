@@ -6,7 +6,7 @@ This package was created to facilitate the data mining from Twitter and Foursqua
 ## Install (generic way)
 
 ```shell
-	$ python3.5 -m pip install SocialCrawler
+	$ python3 -m pip install SocialCrawler
 ```
 
 ## How work ?
@@ -49,8 +49,9 @@ As shown in Stream Overview
 
 - **v 0.0.8**
     - added selenium as requirements to use foursquare browser request (to avoid rate limit), **can not work**
-    - update ExtractorData to a full version to allow get (almost) full VENUE info
+    - updated ExtractorData to a full version to allow get (almost) full VENUE info (NewExtractorData)
     - removed urlib2 as requirements
+    
 
     
 - **v 0.0.7**
