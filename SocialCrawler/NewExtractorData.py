@@ -72,7 +72,7 @@ class NewExtractor:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
         foursquare_mode_valid_value = {'swarm','foursquare'}
-        self.DEBUG = True
+        self.DEBUG = False
         if( foursquare_client_id is None or foursquare_client_secret is None ):
             print(colored('Any parameter can be None.','red'))
             sys.exit()
@@ -87,8 +87,10 @@ class NewExtractor:
         self._foursquare_mode = foursquare_mode
         # print(developer_email)
         # print(developer_password)
-        self._hacking = Hacking(developer_email, developer_password)
-        self._hacking.open_browser()
+        if ( developer_email not is None and developer_password not is None ):
+            self.hacking_enable = True
+            self._hacking = Hacking(developer_email, developer_password)
+            self._hacking.open_browser()
 
     # @property
     # def file_name(self):
@@ -338,12 +340,15 @@ class NewExtractor:
             return False
         except :
             print(colored('[VENUE DETAIL] RATE LIMIT','red'))
-            print(colored('STARTING HACKING BROWSER','green'))
-            response = self._hacking.get_venue_detail(venue_id)
-            venue_data = json.loads(response)
-            # print(colored('Wait one 15 minutes to request again ','red'))
             
-            # time.sleep(960) #sleep 15 minutes
+            
+            if self.hacking_enable:
+                print(colored('STARTING HACKING BROWSER','green'))
+                response = self._hacking.get_venue_detail(venue_id)
+                venue_data = json.loads(response)
+            else:
+                print(colored('Wait one 15 minutes to request again ','red'))
+                time.sleep(960) #sleep 15 minutes
 
             return False
 
