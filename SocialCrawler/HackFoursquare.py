@@ -24,6 +24,7 @@ class Hacking:
 		
 		self.developer_email = developer_email
 		self.developer_password = developer_password
+		self.back_to_main_class = False
 	def open_browser(self):
 		"""Summary
 			Method that set up Foursquare Developer IDs
@@ -59,9 +60,14 @@ class Hacking:
 		# html_source = self.driver.page_source
 		# print(html_source)
 		#get OAuth generate from Fousquare
+		# result = self.driver.find_element_by_id("results").text
+		# return result
 		completeUrl = self.driver.find_element_by_id("completeUrl")
 		self.driver.get(completeUrl.text)
 		return self.driver.find_element_by_tag_name("body").text
+	
+	def set_call_back(self,value):
+		self.back_to_main_class = value
 
 
 
