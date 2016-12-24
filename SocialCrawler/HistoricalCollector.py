@@ -134,6 +134,8 @@ class Collector:
                                         since=since,
                                         until=until,
                                         geocode=geocode).pages()
+        #writing column headers
+        log_file.write("data_count"+"\t"+"twitter_user_id"+"\t"+"city"+"\t"+"tweet_created_at"+"\t"+"tweet.text"+"\n")
         while True:
             try:
                 tweet = results.next()

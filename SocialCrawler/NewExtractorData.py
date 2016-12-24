@@ -19,16 +19,16 @@ import json
 
 class NewExtractor:
     """Read log file from Collector .
-
+    
     ( or files that contains a swarm url code)
-
+    
     This class use tools and keywords from Foursquare API Endpoints.
-
+    
         Note:
             If has a another file that was not created by Collector you must
             have set.column parameter with a integer saying the file column that
             has swarm url. All file input must be *.tsv .
-
+    
         Args:
             see def __init__ docstring
     """
@@ -44,32 +44,35 @@ class NewExtractor:
         Method to init all minimum settings necessary to get data froum Foursquare.
         
         Note:
-            
             foursquare_mode and foursquare_version parameter are two specials parameters 
             to control over the kind of that Foursquare returns.
             see https://developer.foursquare.com/overview/versioning
-
+        
             To see how can get crendetials see https://developer.foursquare.com/overview/auth
-
+        
         Args:
-            foursquare_client_id (str) : Foursquare's app client id
-            foursquare_client_secret (str) : Foursquare's app client secret
-            foursquare_version (str) : kind of Foursquare returns, by default "20140806%20" .
-            foursquare_mode (str) : foursquare mode answer. Valid value: "swarm"  or "foursquare" by default "swarm"
-            (optional)developer_email (str) : email registed in developer foursquare web site
+            foursquare_client_id (str): Foursquare's app client id
+            foursquare_client_secret (str): Foursquare's app client secret
+            foursquare_version (str): kind of Foursquare returns, by default "20140806%20" .
+            foursquare_mode (str): foursquare mode answer. Valid value: "swarm"  or "foursquare" by default "swarm"
+            developer_email (None, optional): Description
+            developer_password (None, optional): Description
             (optional) developer_password (str) : password of email
-
+        
         Attributes:
-            foursquare_client_id (str) : Foursquare's app client id
-            foursquare_client_secret (str) : Foursquare's app client secret
-            foursquare_version (str) : kind of Foursquare returns
-            foursquare_mode (str) : foursquare mode answer
+            foursquare_client_id (str): Foursquare's app client id
+            foursquare_client_secret (str): Foursquare's app client secret
+            foursquare_version (str): kind of Foursquare returns
+            foursquare_mode (str): foursquare mode answer
                                     valid value: "swarm"  or "foursquare"
-            (optional)developer_email (str) : email registed in developer foursquare web site
+            (optional)developer_email (str): email registed in developer foursquare web site
             (optional) developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
+        
+        Deleted Parameters:
+            (optional)developer_email (str): email registed in developer foursquare web site
         """
         foursquare_mode_valid_value = {'swarm','foursquare'}
-
+        self.DEBUG = True
         if( foursquare_client_id is None or foursquare_client_secret is None ):
             print(colored('Any parameter can be None.','red'))
             sys.exit()
@@ -82,6 +85,10 @@ class NewExtractor:
         self._foursquare_client_secret = foursquare_client_secret
         self._foursquare_version = foursquare_version
         self._foursquare_mode = foursquare_mode
+        # print(developer_email)
+        # print(developer_password)
+        self._hacking = Hacking(developer_email, developer_password)
+        self._hacking.open_browser()
 
     # @property
     # def file_name(self):
@@ -100,24 +107,27 @@ class NewExtractor:
     
     def settings(self,mode=None,out_file_name=None,out_path_file=None,column=4,input_file=None):
         """Class constructor.
-
+        
         Method to read log file created by Collector class
         and get Swarm's url code and consult Foursquare to retrieve
         information about avenue, local type, shared_count and all information that is
         returned than will save in a file called log_<out_file_name>.tsv
-
+        
         Args:
-            out_file_name (str) : File name to be created.
-            out_path_file (str) : File path where the file must be saved.
-            mode (str) : json file version.
+            mode (str): json file version.
                          mode valid value:
                          - v1 if the file was created from Collector class or CollectorV2 class
                          - v2 if was not created by any Collector but has the Swarm url
                                   if the value is v2 the "column" parameter must be setted
-            column (int) : column that contain the Swarm url. This field is only
+            out_file_name (str): File name to be created.
+            out_path_file (str): File path where the file must be saved.
+            column (int): column that contain the Swarm url. This field is only
                            verified if "mode" is v2 .
-            input_file(str) : file that contains swarm url code
-
+            input_file (None, optional): Description
+        
+        Deleted Parameters:
+            input_file(str): file that contains swarm url code
+        
         """
         mode_valid_value = {'v1','v2'}
 
@@ -140,18 +150,19 @@ class NewExtractor:
                 sys.exit()
             self._column = column
 
-    def consultFoursquare(self):
-        """Method to access foursquare and use resolveId.
 
+    def consult_foursquare(self):
+        """Method to access foursquare and use resolveId.
+        
         This method is called to each line read from input file, so
         all attributes of credentials function must be setted correctly
-
+        
         resolvedId is a function from Foursquare API Endpoints to get data from a swarm url code.
         see https://developer.foursquare.com/docs/
         """
-        swarm_prefix = "https://www.swarmapp.com/c/"
-        url_venue = 'https://api.foursquare.com/v2/venues/'
-        url_resolveID = 'https://api.foursquare.com/v2/checkins/resolve?shortId='
+        self.swarm_prefix = "https://www.swarmapp.com/c/"
+        self.url_venue = 'https://api.foursquare.com/v2/venues/'
+        self.url_resolveID = 'https://api.foursquare.com/v2/checkins/resolve?shortId='
 
         if(self._mode is None or self._file_name is None or self._path_file is None or self._input_file is None):
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'))
@@ -159,222 +170,236 @@ class NewExtractor:
 
         __out = open( self._path_file + '/' + self._file_name + '.tsv','a')
         
-        #set header
-        __out.write( 'checkin_id' \
-                    + '\t' + 'checkin_createdAt' \
-                    + '\t' + 'user_id' \
+        #set file header
+        __out.write( 'checkin_createdAt' \
+                    + '\t' + 'twitter_user_id' \
+                    + '\t' + '4square_user_id' \
                     + '\t' + 'user_gender' \
-                    + '\t' + 'swarm_key' \
+                    + '\t' + 'venue_city' \
                     + '\t' + 'venue_id' \
-                    + '\t' + 'venue_coord' \
+                    + '\t' + 'venue_lat' \
+                    + '\t' + 'venue_lng' \
                     + '\t' + 'venue_categories_id' \
-                    + '\t' + 'venue_categories_name' \
                     + '\t' + 'venue_stats_checkinsCount' \
                     + '\t' + 'venue_stats_userCount' \
+                    + '\t' + 'venue_rating' \
+                    + '\t' + 'venue_parent_id' \
+                    + '\t' + 'venue_parent_categories_id' \
                     +'\n')
+        
+        number_line = 0
+        for line in open(self._input_file, 'r'):
+            number_line = number_line + 1
+            # print("File opened")
+            # print(line)
+            # try:
+            venue_id = self.get_swarm_data(__out,line,number_line)
+            if venue_id is "NONE":
+                print("ERROR SWARM DATA")
+                __out.write("\n")
+                continue
+            r = self.get_4square_data(venue_id, __out)
+            if(r is False):
+                print("ERROR 4SQUARE DATA")
+                __out.write("\n")
 
-        for line in open( self._input_file,'r'): #read each line from input file
-            
-            line_split = line.split('\t')
-            
-            # print(line + "URL T.CO " + line_split[self._column])
-            try:
-            
-                t_co_url = line_split[self._column] #get tweet text
-                
-                idx = t_co_url.index('https://t.co/')
+            # except :
+            #     print(colored('[UNKOWN] ERROR ','red' ))
+            #     continue
+        __out.close()
 
-                t_co_url = t_co_url[ idx : idx+23 ] #get all t.co url
+    def get_swarm_data(self,__out=None,file_line=None,number_line=None,):
+        """Method to get swarm data from a t.co url
+        Args:
+            file_line: line from file that contains
+            number_line: line of file that are being read
+            __out (TYPE): Description
+            t.co url
+        Return 
+            venue_id
+        
+        """
+        # print("SWARM ")
+        line_splitted = file_line.split('\t')
+        try:
+            # print('Looking for t.co ...')
+            t_co_url = line_splitted[self._column]
+            print('Found t.co ' +  t_co_url)
+            idx = t_co_url.index('https://t.co/')#get where start the url
+            t_co_url = t_co_url[idx:idx+23]
+            print('Trying resolve '+t_co_url)
+            swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
 
-                print("Trying resolve "+t_co_url)
-
-                swarm_resolved_url =  urllib.request.urlopen( t_co_url ) # try resolve swarm short url 
-            
-            except HTTPError as e:
+        except HTTPError as e:
                 print(colored('URLLIB URLOPEN FAILED ERROR CODE %s' %e.code,'red'))
-                continue
-            
-            except ValueError as e:
-                print(colored(' SWARM SHORT URL ERROR ','red'))
-                print(e)
-                continue
-            except URLError as e:
-                print(colored(' URL ERROR ','red'))
-                print(e)
-                continue
-            except ConnectionResetError as e:
-                print(colored(' CONNECTION RESET ERROR ','red'))
-                print(e)
-                continue
-            except ConnectionError as e:
-                print(colored(' CONNECTION ERROR ','red'))
-                print(e)
-                continue
-            except ConnectionAbortedError as e:
-                print(colored(' CONNECTION ABORTED ERROR ','red'))
-                print(e)
-                continue
-            except ConnectionRefusedError as e:
-                print(colored(' CONNECTION REFUSED ERROR ','red'))
-                print(e)
-                continue
-            except :
-                print(colored(' URLLIB ERROR','red'))
-                continue
+        except ValueError as e:
+            print(colored(' SWARM SHORT URL ERROR ','red'))
+            print(e)
+        except URLError as e:
+            print(colored(' URL ERROR ','red'))
+            print(e)
+            return "NONE"
+        except ConnectionResetError as e:
+            print(colored(' CONNECTION RESET ERROR ','red'))
+            print(e)
+            return "NONE"
+        except ConnectionError as e:
+            print(colored(' CONNECTION ERROR ','red'))
+            print(e)
+            return "NONE"
+        except ConnectionAbortedError as e:
+            print(colored(' CONNECTION ABORTED ERROR ','red'))
+            print(e)
+            return "NONE"
+        except ConnectionRefusedError as e:
+            print(colored(' CONNECTION REFUSED ERROR ','red'))
+            print(e)
+            return "NONE"
+        except :
+            print(colored(' URLLIB ERROR','red'))
+            return "NONE"
 
-            if swarm_prefix not in swarm_resolved_url.url: #if do not have swarm key code
-                print(swarm_resolved_url.url)
-                print(colored('SWARM URL ERROR','red') )
-                continue
+        print(colored("SWARM SOLVED",'green'))
 
-            print("resolved sucessfully. Link resolved is "+swarm_resolved_url.url )
+        if self.swarm_prefix not in swarm_t_co_resolved.url:
+            print(swarm_t_co_resolved.url)
+            print(colored('SWARM URL ERROR','red') )
+            return "NONE"
 
-            key =  swarm_resolved_url.url[ len(swarm_resolved_url.url) - 11 : ] #get string after www.swarmapp.com/
-            
-            try:
+        print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url )
+        key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
 
-                response = requests.get( url_resolveID + key + 
+        try:
+            response = requests.get( self.url_resolveID + key + 
                                       '&client_id=' + self._foursquare_client_id +
                                       '&client_secret=' + self._foursquare_client_secret +
                                       '&v=' + self._foursquare_version +
                                       '&m=' + self._foursquare_mode )
 
-                swarm_4square_data = response.json()
-                
+            swarm_data = response.json()
 
-            except HTTPError as e:
-                print(colored('HTTPERROR ','red'))
-                print(colored(e,'red'))
-                continue
-            except :
-                print(colored('FOURSQUARE REQUESTS GET ERROR ','red'))
-                # hour = time.strftime("%H")
-                # minute = time.strftime("%M")
-                # second = time.strftime("%S")
-                # print(colored('STOP REQUEST IN ' + str(hour+1) + ':' + str(minute+1) + ':' + str(second) , 'red' ) )
-                print(colored('Wait 15 minutes to request again ','red'))
-                time.sleep(960) #sleep 1 hour and 1 minute
-
-                continue
-
-            try:
-                venue_id = swarm_4square_data['response']['checkin']['venue']['id']
-                venue_request = requests.get( url_venue + venue_id +
-                                                  '?client_id=' + self._foursquare_client_id +
-                                                  '&client_secret=' + self._foursquare_client_secret +
-                                                  '&v=' + self._foursquare_version)
-
-                venue_data = venue_request.json()
-            except HTTPError as e:
-                print(colored('HTTPERROR ','red'))
-                print(colored(e,'red'))
-                continue
-
-            except :
-                print(colored('VENUE REQUESTS GET ERROR ','red'))
-                # print(colored('STOP REQUEST IN ' + str(time.strftime("%H:%M:%S"),'red') ) )
-                
-                # hour = time.strftime("%H")
-                # minute = time.strftime("%M")
-                # second = time.strftime("%S")
-                print(colored('[VENUE API] Wait one 15 minutes to request again ','red'))
-                # print('Next request '+ str(hour+1) + ':' + str(minute+1) + ':' + str(second))
-                # print(colored('STOP REQUEST IN ' + str(hour+1) + ':' + str(minute+1) + ':' + str(second) , 'red' ) )
-                time.sleep(960) #sleep 15 minutes
-                continue    
-                # if( swarm_4square_data['meta']['code'] == "200"): #data yet available in foursquare dataset
-
-            try:
-                checkin_id = swarm_4square_data['response']['checkin']['id']
-            except:
-                print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'))
-                continue
+        except HTTPError as e:
+            # print(colored('HTTPERROR ','red'))
+            print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'))
+            print(colored(e,'red'))
             
-            try:    
-                checkin_createdAt = swarm_4square_data['response']['checkin']['createdAt']
-            except:
-                print(colored('SWARM CHECKIN ERROR [PARSER CREATEDAT]','red'))
-                continue
+        except :
+            print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'))
+            print(colored('Wait 15 minutes to request again ','red'))
+            time.sleep(960) #sleep 1 hour and 1 minute
 
-            try:
-                user_id = swarm_4square_data['response']['checkin']['user']['id']
-            except:
-                print(colored('SWARM CHECKIN ERROR [PARSER USER_ID]','red'))
-                continue
-
-            try:
-                user_gender = swarm_4square_data['response']['checkin']['user']['gender']
-            except:
-                print(colored('SWARM CHECKIN ERROR [PARSER USER_GENDER]','red'))
-                continue
-
-            print("Foursquare and Venue requests success.")
-            print("Saving Foursquare data.")
-            __out.write( str(checkin_id) + \
-                        '\t' + str(checkin_createdAt) \
-                        + '\t' + str(user_id) + '\t' \
-                        + user_gender \
-                        + '\t' + key + '\t' )
-            # write data about user
-
-            try:
-                venue_id = venue_data['response']['venue']['id']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_ID]','red'))
-                continue
-
-            try:
-                venue_lat = venue_data['response']['venue']['location']['lat']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_LOCATION_LAT]','red'))
-                __out.write('\n')
-                continue
-
-            try:
-                venue_lng = venue_data['response']['venue']['location']['lng']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_LOCATION_LNG]','red'))
-                __out.write('\n')
-                continue
-
-            try:
-                categorie_id = venue_data['response']['venue']['categories'][0]['id']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_CATEGORIE_ID]','red'))
-                __out.write('\n')
-                continue
-
-            try:
-                categorie_name = venue_data['response']['venue']['categories'][0]['name']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_CATEGORIE_NAME]','red'))
-                __out.write('\n')
-                continue
-
-            try:
-                stats_checkins_count = venue_data['response']['venue']['stats']['checkinsCount']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_STATS_CHECKINSCOUNT]','red'))
-                __out.write('\n')
-                continue
-
-            try:
-                stats_user_count = venue_data['response']['venue']['stats']['usersCount']
-            except:
-                print(colored('VENUE ERROR [PARSER VENUE_STATS_USERSCOUNT]','red'))
-                __out.write('\n')
-                continue
+        try:
+            checkin_user_id=swarm_data['response']['checkin']['user']['id']
+        except:
+            print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'))
+            checkin_user_id = "NULL"
             
-            print("Saving Venue data.")
-            __out.write( str(venue_id) \
-                        + '\t' + str(venue_lat) + ',' + str(venue_lng) \
-                        + '\t' + str(categorie_id) + '\t' \
-                        + categorie_name + '\t' \
-                        + str(stats_checkins_count) \
-                        + '\t' + str(stats_user_count) \
-                        + '\n')
-            # break
-        __out.close()
+        try:
+            checkin_user_gender=swarm_data['response']['checkin']['user']['gender']
+        except:
+            print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'))
+            checkin_user_id = "NULL"
+            
+
+        __out.write( line_splitted[3] \
+                    +"\t"+str(line_splitted[1]) \
+                    +"\t"+str(checkin_user_id) \
+                    +"\t"+checkin_user_gender \
+                    +"\t"+line_splitted[2] \
+                    +"\t")
+
+        print("Saved swarm data. Going to retrieve Foursquare data.")
+        return swarm_data['response']['checkin']['venue']['id']
+
+    def get_4square_data(self, venue_id=None,__out=None):
+        """Method to retrieve venue information
+        
+        Args:
+            venue_id (TYPE): venue id
+            __out (TYPE): output file
+        
+        Returns:
+            TYPE: Description
+        """
+        try:
+            response = requests.get(self.url_venue \
+                                    + venue_id \
+                                    + '?client_id=' \
+                                    + self._foursquare_client_id \
+                                    + '&client_secret=' \
+                                    + self._foursquare_client_secret \
+                                    + '&v=' \
+                                    + self._foursquare_version \
+                                    )
+            venue_data = response.json()
+        except HTTPError as e:
+            print(colored('[HTTP ERROR] VENUE DETAIL ','red'))
+            print(colored(e,'red'))
+            return False
+        except :
+            print(colored('[VENUE DETAIL] RATE LIMIT','red'))
+            print(colored('STARTING HACKING BROWSER','green'))
+            response = self._hacking.get_venue_detail(venue_id)
+            venue_data = json.loads(response)
+            # print(colored('Wait one 15 minutes to request again ','red'))
+            
+            # time.sleep(960) #sleep 15 minutes
+
+            return False
+
+
+        try:
+            venue_lat = venue_data['response']['venue']['location']['lat']
+        except:
+            venue_lat = "NULL"
+
+        try:
+            venue_lng = venue_data['response']['venue']['location']['lng']
+        except:
+            venue_lng = "NULL"
+
+        try:
+            venue_categories_id = venue_data['response']['venue']['categories'][0]['id']
+        except:
+            venue_categories_id = "NULL"
+
+        try:
+            venue_stats_checkinsCount = venue_data['response']['venue']['stats']['checkinsCount']
+        except:
+            venue_stats_checkinsCount = "NULL"
+
+        try:
+            venue_stats_users_counts = venue_data['response']['venue']['stats']['usersCount']
+        except:
+            venue_stats_users_counts = "NULL"
+
+        try:
+            venue_rating = venue_data['response']['venue']['rating']
+        except:
+            venue_rating = "NULL"
+
+        try:
+            venue_parent_id = venue_data['response']['venue']['parent']['id']
+        except:
+            venue_parent_id = "NULL"
+
+        try:
+            venue_parent_categories_id = venue_data['response']['venue']['parent']['categories']['id']
+        except:
+            venue_parent_categories_id = "NULL"
+
+        __out.write( venue_id \
+                    +"\t"+str(venue_lat) \
+                    +"\t"+str(venue_lng) \
+                    +"\t"+str(venue_categories_id) \
+                    +"\t"+str(venue_stats_checkinsCount) \
+                    +"\t"+str(venue_stats_users_counts) \
+                    +"\t"+str(venue_rating) \
+                    +"\t"+str(venue_parent_id) \
+                    +"\t"+str(venue_parent_categories_id) \
+                    +"\n")
+        return True
+
 
 
 
