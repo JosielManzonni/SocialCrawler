@@ -1,22 +1,28 @@
 # SocialCrawler
 It is a python package to help get data from Twitter, Foursquare.
 
-This package was created to facilitate the data mining from Twitter and Foursquare.
+This package was created to facilitate the data mining from Twitter and Foursquare. (**Only Linux**)
 
 ## Install (generic way)
 
-```python
-	$ python3.5 -m pip install SocialCrawler
+```shell
+	$ python3 -m pip install SocialCrawler
 ```
 
 ## How work ?
 
-#### Requeriments
+#### Requirements
 
- - Python >= 3.5 
+ - Python >= 3 
+ - setuptools
  - Foursquare developer  credentials ( if you wanna work with)
  - Twitter developer credentials ( if you wanna work with )
- - Facebook developer credentials (Optional)
+ - geckodriver installed and in $PATH (we got this problem with when try run in Linux Mint and Kali)
+    - Download from https://github.com/mozilla/geckodriver/releases
+
+```shell
+    $ export PATH=$PATH:<geckodriver-path>
+```
 
 #### Possibility
 
@@ -41,6 +47,14 @@ As shown in Stream Overview
 
 **See Wiki!**
 
+- **v 0.0.8**
+    - added selenium as requirements to use foursquare browser request (to avoid rate limit), **can not work**
+    - updated ExtractorData to a full version to allow get (almost) full VENUE info (NewExtractorData)
+    - removed urlib2 as requirements
+    - updated run flow, now always we will have return just check if the field is NULL, when this happen it is because the data is missing
+    
+
+    
 - **v 0.0.7**
     - when VENUE or FOURSQUARE get requests error the program thread will wait 15 minutes to request again
     - Added new except treatments 
@@ -56,7 +70,7 @@ As shown in Stream Overview
 	- Add  HistoricalCollector.CollectorV2 that get all data from json tweet and save as tsv file
     - Add in ExtractorData possibility of use other file (non a created by Collector or CollectorV2 ) to consult
     Foursquare. (**not available yet**)
-    - added urllib2 as requeriments
+    - added urllib2 as Requirements
 
 
 - **v 0.0.5**

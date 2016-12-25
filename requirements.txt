@@ -1,0 +1,6 @@
+tweepy
+requests
+selenium
+termcolor
+pyvirtualdisplay
+requests>=2.4.3

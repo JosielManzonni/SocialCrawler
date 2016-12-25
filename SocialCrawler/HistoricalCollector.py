@@ -134,6 +134,8 @@ class Collector:
                                         since=since,
                                         until=until,
                                         geocode=geocode).pages()
+        #writing column headers
+        log_file.write("data_count"+"\t"+"twitter_user_id"+"\t"+"city"+"\t"+"tweet_created_at"+"\t"+"tweet.text"+"\n")
         while True:
             try:
                 tweet = results.next()
@@ -189,11 +191,11 @@ class StreamListenerHandler(tweepy.StreamListener):
     """
 
     def __init__(self, save_path):
-        """Function to set log file."""
+        """Method to set log file path."""
         self.log_file = open(save_path + 'log_.tsv', 'a', encoding='utf8')
 
     def on_data(self, data):
-        """Metho called each data sent from TWitter's server ."""
+        """Method called each data sent from TWitter's server ."""
         jsonencoded = json.loads(data)
 
         print(jsonencoded["created_at"], str(jsonencoded["user"][

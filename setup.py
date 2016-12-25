@@ -14,6 +14,7 @@ AUTHOR_EMAIL = "josiel.wirlino@gmail.com, alice.adativa@gmail.com"
 URL = "http://github.com/JosielWirlino/SocialCrawler"
 VERSION = __import__(PACKAGE).__version__
 
+
 with open('README.rst') as file:
 	long_description = file.read()
 
@@ -27,14 +28,16 @@ setup( name=NAME,
 	license='GNU',
 	packages=[PACKAGE],
 	install_requires=['tweepy',
-					  'requests',
+					  'pyvirtualdisplay',
 					  'termcolor',
+					  'selenium',
 					  'requests>=2.4.3',
 					  ],
 	classifiers=[
 				'Intended Audience :: Developers',
 				'Intended Audience :: Science/Research',
 				'License :: OSI Approved :: GNU General Public License (GPL)',
+				'Programming Language :: Python :: 3',
 				'Programming Language :: Python :: 3.4',
 				'Programming Language :: Python :: 3.5',
 				'Topic :: Scientific/Engineering :: Information Analysis'
