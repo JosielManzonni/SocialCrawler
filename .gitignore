@@ -17,6 +17,7 @@ example/Log/
 example/stream_api.py
 example/test_stream_api.py
 example/test_*
+example/historical.py
 example/SocialCrawler.egg-info/
 SocialCrawler/test_ned.py
 SocialCrawler/test_*
