@@ -1,0 +1,10 @@
+Requirement already satisfied: SocialCrawler in /home/wirlino/Documents/Git/SocialCrawler
+Requirement already satisfied: tweepy in /usr/local/lib/python3.5/dist-packages (from SocialCrawler)
+Requirement already satisfied: pyvirtualdisplay in /usr/local/lib/python3.5/dist-packages (from SocialCrawler)
+Requirement already satisfied: termcolor in /usr/local/lib/python3.5/dist-packages (from SocialCrawler)
+Requirement already satisfied: selenium in /usr/local/lib/python3.5/dist-packages (from SocialCrawler)
+Requirement already satisfied: requests>=2.4.3 in /usr/lib/python3/dist-packages (from SocialCrawler)
+Requirement already satisfied: six>=1.7.3 in /usr/lib/python3/dist-packages (from tweepy->SocialCrawler)
+Requirement already satisfied: requests-oauthlib>=0.4.1 in /usr/local/lib/python3.5/dist-packages (from tweepy->SocialCrawler)
+Requirement already satisfied: EasyProcess in /usr/local/lib/python3.5/dist-packages (from pyvirtualdisplay->SocialCrawler)
+Requirement already satisfied: oauthlib>=0.6.2 in /usr/lib/python3/dist-packages (from requests-oauthlib>=0.4.1->tweepy->SocialCrawler)
