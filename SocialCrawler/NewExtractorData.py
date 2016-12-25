@@ -72,7 +72,9 @@ class NewExtractor:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
         foursquare_mode_valid_value = {'swarm','foursquare'}
+        
         self.DEBUG = False
+
         if( foursquare_client_id is None or foursquare_client_secret is None ):
             print(colored('Any parameter can be None.','red'))
             sys.exit()
@@ -87,7 +89,7 @@ class NewExtractor:
         self._foursquare_mode = foursquare_mode
         # print(developer_email)
         # print(developer_password)
-        if ( developer_email not is None and developer_password not is None ):
+        if ( developer_email is not None and developer_password is not None ):
             self.hacking_enable = True
             self._hacking = Hacking(developer_email, developer_password)
             self._hacking.open_browser()
@@ -170,10 +172,10 @@ class NewExtractor:
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'))
             sys.exit()
 
-        __out = open( self._path_file + '/' + self._file_name + '.tsv','a')
+        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','w')
         
         #set file header
-        __out.write( 'checkin_createdAt' \
+        self.__out.write( 'checkin_createdAt' \
                     + '\t' + 'twitter_user_id' \
                     + '\t' + '4square_user_id' \
                     + '\t' + 'user_gender' \
@@ -196,22 +198,22 @@ class NewExtractor:
             # print("File opened")
             # print(line)
             # try:
-            venue_id = self.get_swarm_data(__out,line,number_line)
+            venue_id = self.get_swarm_data(line,number_line)
             if venue_id is "NONE":
                 print("ERROR SWARM DATA")
-                __out.write("\n")
+                self.__out.write("\n")
                 continue
-            r = self.get_4square_data(venue_id, __out)
+            r = self.get_4square_data(venue_id)
             if(r is False):
                 print("ERROR 4SQUARE DATA")
-                __out.write("\n")
+                self.__out.write("\n")
 
             # except :
             #     print(colored('[UNKOWN] ERROR ','red' ))
             #     continue
-        __out.close()
+        self.__out.close()
 
-    def get_swarm_data(self,__out=None,file_line=None,number_line=None,):
+    def get_swarm_data(self,file_line=None,number_line=None,):
         """Method to get swarm data from a t.co url
         Args:
             file_line: line from file that contains
@@ -273,7 +275,7 @@ class NewExtractor:
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
 
         api_rate_limit = True
-        while api_rate_limit
+        while api_rate_limit:
             try:
                 response = requests.get( self.url_resolveID + key + 
                                           '&client_id=' + self._foursquare_client_id +
@@ -306,8 +308,10 @@ class NewExtractor:
             print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'))
             checkin_user_id = "NULL"
             
+        if self.DEBUG:
+            print(self._path_file + '/' + self._file_name + '.tsv')
 
-        __out.write( line_splitted[3] \
+        self.__out.write( line_splitted[3] \
                     +"\t"+str(line_splitted[1]) \
                     +"\t"+str(checkin_user_id) \
                     +"\t"+checkin_user_gender \
@@ -317,7 +321,7 @@ class NewExtractor:
         print("Saved swarm data. Going to retrieve Foursquare data.")
         return swarm_data['response']['checkin']['venue']['id']
 
-    def get_4square_data(self, venue_id=None,__out=None):
+    def get_4square_data(self, venue_id=None):
         """Method to retrieve venue information
         
         Args:
@@ -407,7 +411,10 @@ class NewExtractor:
         except:
             venue_parent_categories_id = "NULL"
 
-        __out.write( venue_id \
+        if self.DEBUG:
+            print(self._path_file + '/' + self._file_name + '.tsv')
+
+        self.__out.write( venue_id \
                     +"\t"+str(venue_lat) \
                     +"\t"+str(venue_lng) \
                     +"\t"+str(venue_categories_id) \
