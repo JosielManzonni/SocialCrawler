@@ -87,9 +87,10 @@ class NewExtractor:
         self._foursquare_client_secret = foursquare_client_secret
         self._foursquare_version = foursquare_version
         self._foursquare_mode = foursquare_mode
+        self.hacking_enable = False
         # print(developer_email)
         # print(developer_password)
-        if ( developer_email is not None and developer_password is not None ):
+        if ( developer_email is not None or developer_password is not None ):
             self.hacking_enable = True
             self._hacking = Hacking(developer_email, developer_password)
             self._hacking.open_browser()
@@ -276,6 +277,7 @@ class NewExtractor:
 
         api_rate_limit = True
         while api_rate_limit:
+            api_rate_limit = False
             try:
                 response = requests.get( self.url_resolveID + key + 
                                           '&client_id=' + self._foursquare_client_id +
@@ -284,7 +286,6 @@ class NewExtractor:
                                           '&m=' + self._foursquare_mode )
 
                 swarm_data = response.json()
-                api_rate_limit = False
             except HTTPError as e:
                 # print(colored('HTTPERROR ','red'))
                 print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'))
@@ -333,6 +334,7 @@ class NewExtractor:
         """
         api_venue_rate_limit = True
         while api_venue_rate_limit:
+            api_venue_rate_limit = False
             try:
                 response = requests.get(self.url_venue \
                                         + venue_id \
@@ -344,7 +346,6 @@ class NewExtractor:
                                         + self._foursquare_version \
                                         )
                 venue_data = response.json()
-                api_venue_rate_limit = False
 
             except HTTPError as e:
                 print(colored('[HTTP ERROR] VENUE DETAIL ','red'))
@@ -352,11 +353,11 @@ class NewExtractor:
                 # return False
             except :
                 print(colored('[VENUE DETAIL] RATE LIMIT','red'))
-                if self.hacking_enable:
+                if self.hacking_enable==True:
                     print(colored('STARTING HACKING BROWSER','green'))
                     response = self._hacking.get_venue_detail(venue_id)
                     venue_data = json.loads(response)
-                    api_venue_rate_limit =  False
+                    # api_venue_rate_limit =  False
 
                 else:
                     print(colored('Wait one 15 minutes to request again ','red'))
