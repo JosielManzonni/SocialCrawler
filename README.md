@@ -47,6 +47,9 @@ As shown in Stream Overview
 
 **See Wiki!**
 
+- **v 0.1.0**
+    - fixed module class declaration
+
 - **v 0.0.9**
     - fixed syntax erro and hacking method dir output
 
