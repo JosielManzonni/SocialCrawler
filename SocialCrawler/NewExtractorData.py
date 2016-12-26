@@ -14,7 +14,7 @@ from urllib.error import URLError
 from pip._vendor.requests.exceptions import HTTPError
 import time
 import requests
-from HackFoursquare import Hacking 
+
 import json
 
 class NewExtractor:
@@ -92,7 +92,7 @@ class NewExtractor:
         # print(developer_password)
         if ( developer_email is not None or developer_password is not None ):
             self.hacking_enable = True
-            self._hacking = Hacking(developer_email, developer_password)
+            self._hacking = HackFoursquare.Hacking(developer_email, developer_password)
             self._hacking.open_browser()
 
     # @property
