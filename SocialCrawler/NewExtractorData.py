@@ -227,6 +227,7 @@ class NewExtractor:
         """
         # print("SWARM ")
         line_splitted = file_line.split('\t')
+        swarm_t_co_resolved = "NONE"
         try:
             # print('Looking for t.co ...')
             t_co_url = line_splitted[self._column]
@@ -241,6 +242,8 @@ class NewExtractor:
         except ValueError as e:
             print(colored(' SWARM SHORT URL ERROR ','red'))
             print(e)
+            return "NONE"
+
         except URLError as e:
             print(colored(' URL ERROR ','red'))
             print(e)
@@ -307,7 +310,7 @@ class NewExtractor:
             checkin_user_gender=swarm_data['response']['checkin']['user']['gender']
         except:
             print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'))
-            checkin_user_id = "NULL"
+            checkin_user_gender = "NULL"
             
         if self.DEBUG:
             print(self._path_file + '/' + self._file_name + '.tsv')
@@ -335,6 +338,7 @@ class NewExtractor:
         api_venue_rate_limit = True
         while api_venue_rate_limit:
             api_venue_rate_limit = False
+            venue_data = "None"
             try:
                 response = requests.get(self.url_venue \
                                         + venue_id \
