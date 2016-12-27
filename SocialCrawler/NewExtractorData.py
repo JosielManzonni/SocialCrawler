@@ -20,7 +20,7 @@ import json
 
 f_client_id = 0
 f_client_secret = 1
-c_index = -1
+c_index = 0
 
 
 class NewExtractor:
@@ -76,17 +76,19 @@ class NewExtractor:
         Deleted Parameters:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
+        self.DEBUG = True
         
+        print("Crendential array contains %s " %len(credentials))
+
         if len(credentials) == 0:
             print(colored('Credentials parameter must be at least one client id and secret.','red'))
             sys.exit()
         foursquare_mode_valid_value = {'swarm','foursquare'}
         
-        self.DEBUG = False
 
-        if( foursquare_client_id is None or foursquare_client_secret is None ):
-            print(colored('Any parameter can be None.','red'))
-            sys.exit()
+        # if( foursquare_client_id is None or foursquare_client_secret is None ):
+        #     print(colored('Any parameter can be None.','red'))
+        #     sys.exit()
 
         if( foursquare_mode not in foursquare_mode_valid_value ):
             print(colored('fourquare_mode invalid value.','red'))
@@ -104,11 +106,12 @@ class NewExtractor:
             self.hacking_enable = True
             self._hacking = HackFoursquare.Hacking(developer_email, developer_password)
             self._hacking.open_browser()
+        print("Setup okay")
 
     def get_next_credential(self):
         global c_index
         result = False
-        if(c_index < (len(self.credentials)-1)
+        if(c_index < (len(self._credentials)-1)):
             c_index +=1
             result = True
         else:
@@ -178,7 +181,7 @@ class NewExtractor:
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'))
             sys.exit()
 
-        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','w')
+        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','a')
         
         #set file header
         self.__out.write( 'checkin_createdAt' \
@@ -197,6 +200,7 @@ class NewExtractor:
                     + '\t' + 'venue_parent_id' \
                     + '\t' + 'venue_parent_categories_id' \
                     +'\n')
+        self.__out.flush()
         
         number_line = 0
         for line in open(self._input_file, 'r'):
@@ -208,11 +212,13 @@ class NewExtractor:
             if venue_id is "NONE":
                 print("ERROR SWARM DATA")
                 self.__out.write("\n")
+                self.__out.flush()
                 continue
             r = self.get_4square_data(venue_id)
             if(r is False):
                 print("ERROR 4SQUARE DATA")
                 self.__out.write("\n")
+                self.__out.flush()
 
             # except :
             #     print(colored('[UNKOWN] ERROR ','red' ))
@@ -293,8 +299,8 @@ class NewExtractor:
             api_rate_limit = False
             try:
                 response = requests.get( self.url_resolveID + key + 
-                                          '&client_id=' + self.credentials[c_index][f_client_id] +
-                                          '&client_secret=' + self.credentials[c_index][f_client_secret] +
+                                          '&client_id=' + self._credentials[c_index][f_client_id] +
+                                          '&client_secret=' + self._credentials[c_index][f_client_secret] +
                                           '&v=' + self._foursquare_version +
                                           '&m=' + self._foursquare_mode )
 
@@ -340,6 +346,7 @@ class NewExtractor:
                     +"\t"+checkin_user_gender \
                     +"\t"+line_splitted[2] \
                     +"\t")
+        self.__out.flush()
 
         print("Saved swarm data. Going to retrieve Foursquare data.")
         return swarm_data['response']['checkin']['venue']['id']
@@ -358,6 +365,7 @@ class NewExtractor:
         
         global f_client_id
         global f_client_secret
+        global c_index
 
         while api_venue_rate_limit:
             api_venue_rate_limit = False
@@ -366,9 +374,9 @@ class NewExtractor:
                 response = requests.get(self.url_venue \
                                         + venue_id \
                                         + '?client_id=' \
-                                        + self.credentials[c_index][f_client_id] \
+                                        + self._credentials[c_index][f_client_id] \
                                         + '&client_secret=' \
-                                        + self.credentials[c_index][f_client_secret] \
+                                        + self._credentials[c_index][f_client_secret] \
                                         + '&v=' \
                                         + self._foursquare_version \
                                         )
@@ -462,6 +470,7 @@ class NewExtractor:
                     +"\t"+str(venue_parent_id) \
                     +"\t"+str(venue_parent_categories_id) \
                     +"\n")
+        self.__out.flush()
         return True
 
 
