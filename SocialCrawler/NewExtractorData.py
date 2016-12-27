@@ -76,9 +76,9 @@ class NewExtractor:
         Deleted Parameters:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
-        self.DEBUG = True
-        
-        print("Crendential array contains %s " %len(credentials))
+        self.DEBUG = False
+        if self.DEBUG:
+            print("Crendential array contains %s " %len(credentials))
 
         if len(credentials) == 0:
             print(colored('Credentials parameter must be at least one client id and secret.','red'))
