@@ -17,24 +17,27 @@ import requests
 
 import json
 
+
+f_client_id = 0
+f_client_secret = 1
+c_index = -1
+
+
 class NewExtractor:
+
     """Read log file from Collector .
-    
     ( or files that contains a swarm url code)
-    
     This class use tools and keywords from Foursquare API Endpoints.
-    
         Note:
             If has a another file that was not created by Collector you must
             have set.column parameter with a integer saying the file column that
             has swarm url. All file input must be *.tsv .
-    
         Args:
             see def __init__ docstring
     """
-   
-    def __init__(self,foursquare_client_id=None, 
-                 foursquare_client_secret=None,
+
+    def __init__(self,
+                 credentials=None,
                  foursquare_version="20140806%20",
                  foursquare_mode="swarm",
                  developer_email=None,
@@ -51,8 +54,9 @@ class NewExtractor:
             To see how can get crendetials see https://developer.foursquare.com/overview/auth
         
         Args:
-            foursquare_client_id (str): Foursquare's app client id
-            foursquare_client_secret (str): Foursquare's app client secret
+            (obsolete)foursquare_client_id (str): Foursquare's app client id
+            (obsolete)foursquare_client_secret (str): Foursquare's app client secret
+            credentials: Array that contains foursquare_credentials
             foursquare_version (str): kind of Foursquare returns, by default "20140806%20" .
             foursquare_mode (str): foursquare mode answer. Valid value: "swarm"  or "foursquare" by default "swarm"
             developer_email (None, optional): Description
@@ -60,8 +64,9 @@ class NewExtractor:
             (optional) developer_password (str) : password of email
         
         Attributes:
-            foursquare_client_id (str): Foursquare's app client id
-            foursquare_client_secret (str): Foursquare's app client secret
+            credentials: Array that contains foursquare_credentials
+            (obsolete)foursquare_client_id (str): Foursquare's app client id
+            (obsolete)foursquare_client_secret (str): Foursquare's app client secret
             foursquare_version (str): kind of Foursquare returns
             foursquare_mode (str): foursquare mode answer
                                     valid value: "swarm"  or "foursquare"
@@ -71,6 +76,10 @@ class NewExtractor:
         Deleted Parameters:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
+        
+        if len(credentials) == 0:
+            print(colored('Credentials parameter must be at least one client id and secret.','red'))
+            sys.exit()
         foursquare_mode_valid_value = {'swarm','foursquare'}
         
         self.DEBUG = False
@@ -83,8 +92,9 @@ class NewExtractor:
             print(colored('fourquare_mode invalid value.','red'))
             sys.exit()
 
-        self._foursquare_client_id = foursquare_client_id
-        self._foursquare_client_secret = foursquare_client_secret
+        # self._foursquare_client_id = foursquare_client_id
+        # self._foursquare_client_secret = foursquare_client_secret
+        self._credentials = credentials
         self._foursquare_version = foursquare_version
         self._foursquare_mode = foursquare_mode
         self.hacking_enable = False
@@ -95,21 +105,16 @@ class NewExtractor:
             self._hacking = HackFoursquare.Hacking(developer_email, developer_password)
             self._hacking.open_browser()
 
-    # @property
-    # def file_name(self):
-    #     """File name that will be used to save the file created when run."""
-    #     return self._file_name
-    
-    # @property
-    # def mode(self):
-    # 	"""Mode that class was setted."""
-    # 	return self._mode
-    
-    # @property
-    # def path_file(self):
-    # 	"""folder where the file will be saved."""
-    # 	return self._path_file
-    
+    def get_next_credential(self):
+        global c_index
+        result = False
+        if(c_index < (len(self.credentials)-1)
+            c_index +=1
+            result = True
+        else:
+            c_index = 0
+        return result
+
     def settings(self,mode=None,out_file_name=None,out_path_file=None,column=4,input_file=None):
         """Class constructor.
         
@@ -277,14 +282,19 @@ class NewExtractor:
 
         print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url )
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
+        
+        global f_client_id
+        global f_client_secret
+        global c_index
 
         api_rate_limit = True
+        
         while api_rate_limit:
             api_rate_limit = False
             try:
                 response = requests.get( self.url_resolveID + key + 
-                                          '&client_id=' + self._foursquare_client_id +
-                                          '&client_secret=' + self._foursquare_client_secret +
+                                          '&client_id=' + self.credentials[c_index][f_client_id] +
+                                          '&client_secret=' + self.credentials[c_index][f_client_secret] +
                                           '&v=' + self._foursquare_version +
                                           '&m=' + self._foursquare_mode )
 
@@ -295,10 +305,19 @@ class NewExtractor:
                 print(colored(e,'red'))
                 
             except :
+                result = self.get_next_credential()
                 print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'))
-                print(colored('Wait 15 minutes to request again ','red'))
-                time.sleep(960) #sleep 1 hour and 1 minute
+                if(result is False):
+                    # print(colored('Wait 5 minutes to request again ','red'))
+                    print(colored('[API FOURSQUARE RESOLVE ID] SLEEP FOR 5 MIN ','red'))
+                    time.sleep(300) #sleep 5 min
+                    print(colored('[API FOURSQUARE RESOLVE ID] I AM BACK ','red'))
+                    # api_rate_limit = True
+                else:
+                    print(colored('[API FOURSQUARE RESOLVE ID] GET ANOTHER CREDENTIAL ','red'))
+                    print(colored('[API FOURSQUARE RESOLVE ID] TRYING REQUEST THE LAST URL','red'))
                 api_rate_limit = True
+
 
         try:
             checkin_user_id=swarm_data['response']['checkin']['user']['id']
@@ -336,6 +355,10 @@ class NewExtractor:
             TYPE: Description
         """
         api_venue_rate_limit = True
+        
+        global f_client_id
+        global f_client_secret
+
         while api_venue_rate_limit:
             api_venue_rate_limit = False
             venue_data = "None"
@@ -343,9 +366,9 @@ class NewExtractor:
                 response = requests.get(self.url_venue \
                                         + venue_id \
                                         + '?client_id=' \
-                                        + self._foursquare_client_id \
+                                        + self.credentials[c_index][f_client_id] \
                                         + '&client_secret=' \
-                                        + self._foursquare_client_secret \
+                                        + self.credentials[c_index][f_client_secret] \
                                         + '&v=' \
                                         + self._foursquare_version \
                                         )
@@ -364,8 +387,17 @@ class NewExtractor:
                     # api_venue_rate_limit =  False
 
                 else:
-                    print(colored('Wait one 15 minutes to request again ','red'))
-                    time.sleep(960) #sleep 15 minutes
+                    result = self.get_next_credential()
+                    if(result is False):
+                        # print(colored('Wait one 5 minutes to request again ','red'))
+                        print(colored('[VENUE DETAIL] SLEEP FOR 5 MIN','red'))
+                        time.sleep(300) #sleep 5 minutes
+                        print(colored('[VENUE DETAIL] I AM BACK','red'))
+                        # api_venue_rate_limit =  True
+                    else:
+                        print(colored('[VENUE DETAIL] GET ANOTHER CREDENTIAL','red'))
+                        print(colored('[VENUE DETAIL] TRYING REQUEST THE LAST URL','red'))
+
                     api_venue_rate_limit =  True
 
                 # return False
