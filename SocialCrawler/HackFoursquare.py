@@ -49,9 +49,11 @@ class Hacking:
 		
 		"""
 		if self.mode is "hired":
+			self.virtual_display = None
 			self.virtual_display = Display(visible=0,size=(800,600))
 			self.virtual_display.start()
 		
+		self.browser = None
 		self.browser = webdriver.Firefox()
 		self.browser.get(self.login_url)
 
@@ -89,7 +91,7 @@ class Hacking:
 		
 		going = True
 		while going:
-			count +=1
+			# count +=1
 			if v is "v":
 				self.browser.get(self.venue_url+key_id)
 			else:
@@ -103,9 +105,9 @@ class Hacking:
 				count = 0
 			except TimeoutException:
 				print(colored("Time Out! Doing request again"))
-				if( count == 5 ):
-					self.destroy()
-					self.open_browser()
+				# if( count == 5 ):
+				self.destroy()
+				self.open_browser()
 
 				going = True
 
