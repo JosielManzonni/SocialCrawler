@@ -39,9 +39,8 @@ class NewExtractor:
     def __init__(self,
                  credentials=None,
                  foursquare_version="20140806%20",
-                 foursquare_mode="swarm",
-                 developer_email=None,
-                 developer_password =None):
+                 foursquare_mode="swarm"
+                 ):
         """Class constructor.
         
         Method to init all minimum settings necessary to get data froum Foursquare.
@@ -59,9 +58,8 @@ class NewExtractor:
             credentials: Array that contains foursquare_credentials
             foursquare_version (str): kind of Foursquare returns, by default "20140806%20" .
             foursquare_mode (str): foursquare mode answer. Valid value: "swarm"  or "foursquare" by default "swarm"
-            developer_email (None, optional): Description
-            developer_password (None, optional): Description
-            (optional) developer_password (str) : password of email
+            (obsolete)developer_email (None, optional): Description
+            (obsolete) developer_password (str) : password of email
         
         Attributes:
             credentials: Array that contains foursquare_credentials
@@ -70,8 +68,8 @@ class NewExtractor:
             foursquare_version (str): kind of Foursquare returns
             foursquare_mode (str): foursquare mode answer
                                     valid value: "swarm"  or "foursquare"
-            (optional)developer_email (str): email registed in developer foursquare web site
-            (optional) developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
+            (obsolete)developer_email (str): email registed in developer foursquare web site
+            (obsolete) developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
         
         Deleted Parameters:
             (optional)developer_email (str): email registed in developer foursquare web site
@@ -99,13 +97,13 @@ class NewExtractor:
         self._credentials = credentials
         self._foursquare_version = foursquare_version
         self._foursquare_mode = foursquare_mode
-        self.hacking_enable = False
+        # self.hacking_enable = False
         # print(developer_email,flush=True)
         # print(developer_password,flush=True)
-        if ( developer_email is not None or developer_password is not None ):
-            self.hacking_enable = True
-            self._hacking = HackFoursquare.Hacking(developer_email, developer_password)
-            self._hacking.open_browser()
+        # if ( developer_email is not None or developer_password is not None ):
+        #     self.hacking_enable = True
+        #     self._hacking = HackFoursquare.Hacking(developer_email, developer_password)
+        #     self._hacking.open_browser()
         print("Setup okay",flush=True)
 
     def get_next_credential(self):
@@ -388,25 +386,25 @@ class NewExtractor:
                 # return False
             except :
                 print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
-                if self.hacking_enable==True:
-                    print(colored('STARTING HACKING BROWSER','green'),flush=True)
-                    response = self._hacking.get_venue_detail(venue_id)
-                    venue_data = json.loads(response)
-                    # api_venue_rate_limit =  False
+                # if self.hacking_enable==True:
+                #     print(colored('STARTING HACKING BROWSER','green'),flush=True)
+                #     response = self._hacking.get_venue_detail(venue_id)
+                #     venue_data = json.loads(response)
+                #     # api_venue_rate_limit =  False
 
+                # else:
+                result = self.get_next_credential()
+                if(result is False):
+                    # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
+                    print(colored('[VENUE DETAIL] SLEEP FOR 5 MIN','red'),flush=True)
+                    time.sleep(300) #sleep 5 minutes
+                    print(colored('[VENUE DETAIL] I AM BACK','red'),flush=True)
+                    # api_venue_rate_limit =  True
                 else:
-                    result = self.get_next_credential()
-                    if(result is False):
-                        # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
-                        print(colored('[VENUE DETAIL] SLEEP FOR 5 MIN','red'),flush=True)
-                        time.sleep(300) #sleep 5 minutes
-                        print(colored('[VENUE DETAIL] I AM BACK','red'),flush=True)
-                        # api_venue_rate_limit =  True
-                    else:
-                        print(colored('[VENUE DETAIL] GET ANOTHER CREDENTIAL','red'),flush=True)
-                        print(colored('[VENUE DETAIL] TRYING REQUEST THE LAST URL','red'),flush=True)
+                    print(colored('[VENUE DETAIL] GET ANOTHER CREDENTIAL','red'),flush=True)
+                    print(colored('[VENUE DETAIL] TRYING REQUEST THE LAST URL','red'),flush=True)
 
-                    api_venue_rate_limit =  True
+                api_venue_rate_limit =  True
 
                 # return False
 
