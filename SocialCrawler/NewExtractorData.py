@@ -470,16 +470,3 @@ class NewExtractor:
                     +"\n")
         self.__out.flush()
         return True
-
-
-
-
-
-
-
-
-
-
-
-
-

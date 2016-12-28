@@ -39,8 +39,7 @@ class HeadLess:
     def __init__(self,
                  developer_email=None,
                  developer_password=None,
-                 foursquare_version="20140806%20",
-                 foursquare_mode="swarm"
+                 mode="show"
                  ):
         """Class constructor.
         
@@ -89,21 +88,22 @@ class HeadLess:
         #     print(colored('Any parameter can be None.','red'),flush=True)
         #     sys.exit()
 
-        if( foursquare_mode not in foursquare_mode_valid_value ):
-            print(colored('fourquare_mode invalid value.','red'),flush=True)
-            sys.exit()
+        # if( foursquare_mode not in foursquare_mode_valid_value ):
+        #     print(colored('fourquare_mode invalid value.','red'),flush=True)
+        #     sys.exit()
 
         # self._foursquare_client_id = foursquare_client_id
         # self._foursquare_client_secret = foursquare_client_secret
         # self._credentials = credentials
-        self._foursquare_version = foursquare_version
-        self._foursquare_mode = foursquare_mode
+        # self._foursquare_version = foursquare_version
+        # self._foursquare_mode = foursquare_mode
         # self.hacking_enable = False
         # print(developer_email,flush=True)
         # print(developer_password,flush=True)
+        
         if ( developer_email is not None and developer_password is not None ):
         #     self.hacking_enable = True
-            self._hacking = HackFoursquare.Hacking(developer_email, developer_password)
+            self._hacking = HackFoursquare.Hacking(developer_email, developer_password,mode)
             self._hacking.open_browser()
         
         print("[HEADLESS] Setup okay",flush=True)
