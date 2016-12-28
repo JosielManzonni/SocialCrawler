@@ -79,25 +79,36 @@ class Hacking:
 		Returns:
 		    TYPE: string
 		"""
+		self.version = v
+		self.key_id = key_id
+
+		count=0
 		if(key_id is None):
 			print(colored("key_id must be setted",'red'))
 			return
 		
 		going = True
-		while going
+		while going:
+			count +=1
 			if v is "v":
 				self.browser.get(self.venue_url+key_id)
 			else:
 				self.browser.get(self.resolveId_url+key_id)
 
-			timeout = 10
+			timeout = 15
 			going = False
 			try:
-				element_present = EC.presence_of_element_located(By.ID,'completeUrl')
+				element_present = EC.presence_of_element_located((By.ID,'completeUrl'))
 				WebDriverWait(self.browser, timeout).until(element_present)
+				count = 0
 			except TimeoutException:
 				print(colored("Time Out! Doing request again"))
+				if( count == 5 ):
+					self.destroy()
+					self.open_browser()
+
 				going = True
+
 
 		# html_source = self.browser.page_source
 		# print(html_source)
@@ -122,6 +133,10 @@ class Hacking:
 	# 	self.browser.get(completeUrl.text)
 	# 	return self.browser.find_element_by_tag_name("body").text
 	
+	def destroy(self):
+		self.virtual_display.stop()
+		self.browser.close()
+
 	def set_call_back(self,value):
 		"""Summary
 		
