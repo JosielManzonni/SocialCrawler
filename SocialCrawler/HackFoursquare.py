@@ -109,8 +109,9 @@ class Hacking:
 			except TimeoutException:
 				print(colored("Time Out! Doing request again"))
 				# if( count == 5 ):
-				self.browser.quit()
-				self.browser_login()
+				self.rebuild()
+				# self.browser.quit()
+				# self.browser_login()
 
 				going = True
 
@@ -142,7 +143,7 @@ class Hacking:
 	# 	# self.virtual_display.stop()
 	# 	self.browser.quit()
 
-	def set_call_back(self,value):
+	def rebuild(self):
 		"""Summary
 		
 		Args:
@@ -151,8 +152,8 @@ class Hacking:
 		Returns:
 		    TYPE: Description
 		"""
-		self.back_to_main_class = value
-
+		self.browser.quit()
+		self.browser_login()
 
 
 

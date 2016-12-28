@@ -326,6 +326,7 @@ class HeadLess:
                 
             except :
                 print(colored('[BROWSER FAIL] SLEEP FOR 10 SECONDS ','red'),flush=True)
+                self._hacking.rebuild()
                 time.sleep(10)
                 print(colored('[BROWSER FAIL] I AM BACK ','red'),flush=True)
                 api_rate_limit = True
@@ -406,6 +407,7 @@ class HeadLess:
                 # if(result is False):
                 #     # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
                 print(colored('[VENUE DETAIL] SLEEP FOR 10 SECONDS','red'),flush=True)
+                self._hacking.rebuild()
                 time.sleep(10) #sleep 10 seconds
                 #     print(colored('[VENUE DETAIL] I AM BACK','red'),flush=True)
                 #     # api_venue_rate_limit =  True
@@ -414,6 +416,7 @@ class HeadLess:
                 #     print(colored('[VENUE DETAIL] TRYING REQUEST THE LAST URL','red'),flush=True)
 
                 api_venue_rate_limit =  True
+                # rebuild
 
                 # return False
 
