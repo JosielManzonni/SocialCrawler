@@ -39,7 +39,8 @@ class HeadLess:
     def __init__(self,
                  developer_email=None,
                  developer_password=None,
-                 mode="show"
+                 mode="show",
+                 debug=False
                  ):
         """Class constructor.
         
@@ -74,7 +75,7 @@ class HeadLess:
         Deleted Parameters:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
-        self.DEBUG = False
+        self.DEBUG = debug
         # if self.DEBUG:
         #     print("Crendential array contains %s " %len(credentials),flush=True)
 
@@ -106,7 +107,8 @@ class HeadLess:
             self._hacking = HackFoursquare.Hacking(developer_email, developer_password,mode)
             self._hacking.open_browser()
         
-        print("[HEADLESS] Setup okay",flush=True)
+        if self.DEBUG:
+            print("[HEADLESS] Setup okay",flush=True)
 
     # def get_next_credential(self):
     #     global c_index
@@ -242,10 +244,16 @@ class HeadLess:
         try:
             # print('Looking for t.co ...',flush=True)
             t_co_url = line_splitted[self._column]
-            print('Found t.co ' +  t_co_url,flush=True)
+            
+            if self.DEBUG:
+                print('Found t.co ' +  t_co_url,flush=True)
+            
             idx = t_co_url.index('https://t.co/')#get where start the url
             t_co_url = t_co_url[idx:idx+23]
-            print('Trying resolve '+t_co_url,flush=True)
+            
+            if self.DEBUG:
+                print('Trying resolve '+t_co_url,flush=True)
+            
             swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
 
         except HTTPError as e:
@@ -279,14 +287,17 @@ class HeadLess:
             print(colored(' URLLIB ERROR','red'),flush=True)
             return "NONE"
 
-        print(colored("SWARM SOLVED",'green'),flush=True)
+        if self.DEBUG:
+            print(colored("SWARM SOLVED",'green'),flush=True)
 
         if self.swarm_prefix not in swarm_t_co_resolved.url:
             print(swarm_t_co_resolved.url,flush=True)
             print(colored('SWARM URL ERROR','red') ,flush=True)
             return "NONE"
 
-        print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url ,flush=True)
+        if self.DEBUG:
+            print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url ,flush=True)
+        
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
         
         global f_client_id

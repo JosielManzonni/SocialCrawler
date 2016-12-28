@@ -52,7 +52,10 @@ class Hacking:
 			self.virtual_display = None
 			self.virtual_display = Display(visible=0,size=(800,600))
 			self.virtual_display.start()
-		
+
+		self.browser_login()
+	
+	def browser_login(self):
 		self.browser = None
 		self.browser = webdriver.Firefox()
 		self.browser.get(self.login_url)
@@ -100,14 +103,14 @@ class Hacking:
 			timeout = 15
 			going = False
 			try:
-				element_present = EC.presence_of_element_located((By.ID,'completeUrl'))
+				element_present = EC.presence_of_element_located(self.browser.find_element_by_id('completeUrl'))
 				WebDriverWait(self.browser, timeout).until(element_present)
 				count = 0
 			except TimeoutException:
 				print(colored("Time Out! Doing request again"))
 				# if( count == 5 ):
-				self.destroy()
-				self.open_browser()
+				self.browser.quit()
+				self.browser_login()
 
 				going = True
 
@@ -135,9 +138,9 @@ class Hacking:
 	# 	self.browser.get(completeUrl.text)
 	# 	return self.browser.find_element_by_tag_name("body").text
 	
-	def destroy(self):
-		self.virtual_display.stop()
-		self.browser.close()
+	# def destroy(self):
+	# 	# self.virtual_display.stop()
+	# 	self.browser.quit()
 
 	def set_call_back(self,value):
 		"""Summary
