@@ -183,7 +183,7 @@ class HeadLess:
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'),flush=True)
             sys.exit()
 
-        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','a')
+        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','w')
         
         #set file header
         self.__out.write( 'checkin_createdAt' \
