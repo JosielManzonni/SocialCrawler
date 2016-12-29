@@ -15,7 +15,7 @@ from . import ExtractorData
 
 # from  . import ExtractorData
 
-__version__ = "0.2.6"
+__version__ = "0.2.9"
 
 __all__ = [	
 			"HistoricalCollector",
