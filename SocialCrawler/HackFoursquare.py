@@ -60,7 +60,7 @@ class Hacking:
 		self.browser_login()
 
 	def watch_dog(self, url, element_id):
-		timeout = 15
+		timeout = 10
 		watchdog = 0
 		while True:
 			try:
@@ -86,7 +86,8 @@ class Hacking:
 			if watchdog > 10 :
 				print(colored("[WATCH DOG] WAS STARTED. RESTARTING BROWSER"))
 				self.browser.quit()
-				self.browser = webdriver.Firefox()
+				self.browser_login()
+				# self.browser = webdriver.Firefox()
 				watchdog = 0
 
 		return True
@@ -97,9 +98,10 @@ class Hacking:
 		self.browser = None
 		self.browser = webdriver.Firefox()
 		# try:
-
+		print("Starting Firefox")
 		# self.browser.get(self.login_url)
 		self.watch_dog(self.login_url,"username")
+		print("Trying to do login")
 		# except:
 		# 	print("[UNKOWN ERROR] " + str(sys.exc_info()[0]) ) 
 
@@ -112,6 +114,8 @@ class Hacking:
 		password_field.clear()
 		password_field.send_keys(self.developer_password)
 		self.browser.find_element_by_id("loginFormButton").click()
+		print("Login successed!")
+
 		time.sleep(5)
 		#do login
 	
@@ -209,7 +213,12 @@ class Hacking:
 		Returns:
 		    TYPE: Description
 		"""
-		self.browser.quit()
+		while True:
+			try:
+				self.browser.quit()
+				break
+			except:
+				print(colored("[BROWSER] QUIT FAIL",'red'))
 		self.browser_login()
 	
 	def debug(self):
