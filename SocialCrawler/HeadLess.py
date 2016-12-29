@@ -15,7 +15,8 @@ from pip._vendor.requests.exceptions import HTTPError
 import time
 import requests
 import json
-import HackFoursquare
+
+from SocialCrawler import HackFoursquare
 
 
 f_client_id = 0
@@ -32,8 +33,7 @@ class HeadLess:
             If has a another file that was not created by Collector you must
             have set.column parameter with a integer saying the file column that
             has swarm url. All file input must be *.tsv .
-        Args:
-            see def __init__ docstring
+        
     """
 
     def __init__(self,
@@ -54,53 +54,22 @@ class HeadLess:
             To see how can get crendetials see https://developer.foursquare.com/overview/auth
         
         Args:
-            (obsolete)foursquare_client_id (str): Foursquare's app client id
-            (obsolete)foursquare_client_secret (str): Foursquare's app client secret
-            credentials: Array that contains foursquare_credentials
             foursquare_version (str): kind of Foursquare returns, by default "20140806%20" .
             foursquare_mode (str): foursquare mode answer. Valid value: "swarm"  or "foursquare" by default "swarm"
-            (obsolete)developer_email (None, optional): Description
-            (obsolete) developer_password (str) : password of email
+            developer_email (None, optional): Description
+            developer_password (str) : password of email
         
         Attributes:
-            credentials: Array that contains foursquare_credentials
-            (obsolete)foursquare_client_id (str): Foursquare's app client id
-            (obsolete)foursquare_client_secret (str): Foursquare's app client secret
             foursquare_version (str): kind of Foursquare returns
             foursquare_mode (str): foursquare mode answer
                                     valid value: "swarm"  or "foursquare"
-            (obsolete)developer_email (str): email registed in developer foursquare web site
-            (obsolete) developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
+            developer_email (str): email registed in developer foursquare web site
+            developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
         
-        Deleted Parameters:
-            (optional)developer_email (str): email registed in developer foursquare web site
         """
         self.DEBUG = debug
-        # if self.DEBUG:
-        #     print("Crendential array contains %s " %len(credentials),flush=True)
-
-        # if len(credentials) == 0:
-        #     print(colored('Credentials parameter must be at least one client id and secret.','red'),flush=True)
-        #     sys.exit()
-        foursquare_mode_valid_value = {'swarm','foursquare'}
         
-
-        # if( foursquare_client_id is None or foursquare_client_secret is None ):
-        #     print(colored('Any parameter can be None.','red'),flush=True)
-        #     sys.exit()
-
-        # if( foursquare_mode not in foursquare_mode_valid_value ):
-        #     print(colored('fourquare_mode invalid value.','red'),flush=True)
-        #     sys.exit()
-
-        # self._foursquare_client_id = foursquare_client_id
-        # self._foursquare_client_secret = foursquare_client_secret
-        # self._credentials = credentials
-        # self._foursquare_version = foursquare_version
-        # self._foursquare_mode = foursquare_mode
-        # self.hacking_enable = False
-        # print(developer_email,flush=True)
-        # print(developer_password,flush=True)
+        foursquare_mode_valid_value = {'swarm','foursquare'}
         
         if ( developer_email is not None and developer_password is not None ):
         #     self.hacking_enable = True
@@ -109,16 +78,6 @@ class HeadLess:
         
         if self.DEBUG:
             print("[HEADLESS] Setup okay",flush=True)
-
-    # def get_next_credential(self):
-    #     global c_index
-    #     result = False
-    #     if(c_index < (len(self._credentials)-1)):
-    #         c_index +=1
-    #         result = True
-    #     else:
-    #         c_index = 0
-    #     return result
 
     def settings(self,mode=None,out_file_name=None,out_path_file=None,column=4,input_file=None):
         """Class constructor.
@@ -309,13 +268,8 @@ class HeadLess:
         while api_rate_limit:
             api_rate_limit = False
             try:
-                # response = requests.get( self.url_resolveID + key + 
-                #                           '&client_id=' + self._credentials[c_index][f_client_id] +
-                #                           '&client_secret=' + self._credentials[c_index][f_client_secret] +
-                #                           '&v=' + self._foursquare_version +
-                #                           '&m=' + self._foursquare_mode )
-                
-                response = self._hacking.get_info_detail(v='s',key_id=key)
+                response = self._hacking.get_info_detail(v="swarm",key_id=key)
+                # print(response)
                 swarm_data = json.loads(response)
                 # swarm_data = response.json()
 
@@ -325,9 +279,11 @@ class HeadLess:
                 print(colored(e,'red'),flush=True)
                 
             except :
-                print(colored('[BROWSER FAIL] SLEEP FOR 10 SECONDS ','red'),flush=True)
+                
+                print(colored('[BROWSER FAIL] SLEEP FOR 5 SECONDS ','red'),flush=True)
+                # self._hacking.debug()
                 self._hacking.rebuild()
-                time.sleep(10)
+                time.sleep(5)
                 print(colored('[BROWSER FAIL] I AM BACK ','red'),flush=True)
                 api_rate_limit = True
 
@@ -354,8 +310,14 @@ class HeadLess:
                     +"\t")
         self.__out.flush()
 
-        print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
-        return swarm_data['response']['checkin']['venue']['id']
+        swarm_data_venue_id = "None"
+        # if swarm_data['meta']['code'] == 200:
+        try:
+            print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
+            swarm_data_venue_id = swarm_data['response']['checkin']['venue']['id']
+            return swarm_data_venue_id
+        except:
+            return "NONE"
 
     def get_4square_data(self, venue_id=None):
         """Method to retrieve venue information
@@ -375,18 +337,8 @@ class HeadLess:
 
         while api_venue_rate_limit:
             api_venue_rate_limit = False
-            venue_data = "None"
+            venue_data = "NONE"
             try:
-                # response = requests.get(self.url_venue \
-                #                         + venue_id \
-                #                         + '?client_id=' \
-                #                         + self._credentials[c_index][f_client_id] \
-                #                         + '&client_secret=' \
-                #                         + self._credentials[c_index][f_client_secret] \
-                #                         + '&v=' \
-                #                         + self._foursquare_version \
-                #                         )
-                # venue_data = response.json()
                 response = self._hacking.get_info_detail(v="v",key_id=venue_id)
                 venue_data = json.loads(response)
 
@@ -406,9 +358,11 @@ class HeadLess:
                 # result = self.get_next_credential()
                 # if(result is False):
                 #     # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
-                print(colored('[VENUE DETAIL] SLEEP FOR 10 SECONDS','red'),flush=True)
+                print(colored('[VENUE DETAIL] SLEEP FOR 5 SECONDS','red'),flush=True)
+                
+                # self._hacking.debug()
                 self._hacking.rebuild()
-                time.sleep(10) #sleep 10 seconds
+                time.sleep(5) #sleep 10 seconds
                 #     print(colored('[VENUE DETAIL] I AM BACK','red'),flush=True)
                 #     # api_venue_rate_limit =  True
                 # else:
