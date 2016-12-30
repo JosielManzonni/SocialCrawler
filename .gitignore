@@ -16,11 +16,12 @@ example/hacking_4square_requests.py
 example/Log/
 example/stream_api.py
 example/test_stream_api.py
-example/test_*
 example/historical.py
+example/test_extractor_*
 example/SocialCrawler.egg-info/
 SocialCrawler/test_ned.py
 SocialCrawler/test_*
+*test_sc_008.py
 
 
 # Distribution / packaging
