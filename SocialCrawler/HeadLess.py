@@ -171,13 +171,15 @@ class HeadLess:
             # try:
             venue_id = self.get_swarm_data(line,number_line)
             if venue_id is "NONE":
-                print("ERROR SWARM DATA",flush=True)
+                # print("ERROR SWARM DATA",flush=True)
+                print(colored("[SWARM RESOLVE ID]ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
                 continue
             r = self.get_4square_data(venue_id)
             if(r is False):
-                print("ERROR 4SQUARE DATA",flush=True)
+                # print("ERROR 4SQUARE DATA",flush=True)
+                print(colored("[VENUE DATA] ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
 
@@ -204,14 +206,13 @@ class HeadLess:
             # print('Looking for t.co ...',flush=True)
             t_co_url = line_splitted[self._column]
             
-            if self.DEBUG:
-                print('Found t.co ' +  t_co_url,flush=True)
             
             idx = t_co_url.index('https://t.co/')#get where start the url
             t_co_url = t_co_url[idx:idx+23]
             
             if self.DEBUG:
-                print('Trying resolve '+t_co_url,flush=True)
+                print(colored('\n\nFound t.co ' +  t_co_url,'green'),flush=True)
+                print(colored('Trying resolve '+t_co_url,'green'),flush=True)
             
             swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
 
@@ -256,7 +257,8 @@ class HeadLess:
             return "NONE"
 
         if self.DEBUG:
-            print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url ,flush=True)
+            print(colored("[SWARM] LINK RESOLVED "+swarm_t_co_resolved.url ,'green'),flush=True)
+            # print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url ,flush=True)
         
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
         
@@ -314,7 +316,9 @@ class HeadLess:
         swarm_data_venue_id = "None"
         # if swarm_data['meta']['code'] == 200:
         try:
-            print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
+            # print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
+            # if self.DEBUG:
+            print(colored("[SWARM] SAVED DATA.\n[VENUE DETAIL] RETRIEVING",'green'),flush=True)
             swarm_data_venue_id = swarm_data['response']['checkin']['venue']['id']
             return swarm_data_venue_id
         except:
@@ -350,33 +354,13 @@ class HeadLess:
                 print(colored(e,'red'),flush=True)
                 # return False
             except :
+                
                 print(colored('[BROWSER][VENUE DETAIL] RATE LIMIT','red'),flush=True)
-                # if self.hacking_enable==True:
-                #     print(colored('STARTING HACKING BROWSER','green'),flush=True)
-                #     response = self._hacking.get_venue_detail(venue_id)
-                #     venue_data = json.loads(response)
-                #     # api_venue_rate_limit =  False
-
-                # else:
-                # result = self.get_next_credential()
-                # if(result is False):
-                #     # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
                 print(colored('[BROWSER][VENUE DETAIL] SLEEP FOR 5 SECONDS','red'),flush=True)
                 
-                # self._hacking.debug()
                 self._hacking.rebuild()
-                time.sleep(5) #sleep 10 seconds
-                #     print(colored('[VENUE DETAIL] I AM BACK','red'),flush=True)
-                #     # api_venue_rate_limit =  True
-                # else:
-                #     print(colored('[VENUE DETAIL] GET ANOTHER CREDENTIAL','red'),flush=True)
-                #     print(colored('[VENUE DETAIL] TRYING REQUEST THE LAST URL','red'),flush=True)
-
                 api_venue_rate_limit =  True
-                # rebuild
-
-                # return False
-
+                
 
         try:
             venue_lat = venue_data['response']['venue']['location']['lat']
@@ -423,8 +407,8 @@ class HeadLess:
         except:
             venue_parent_categories_id = "NULL"
 
-        if self.DEBUG:
-            print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
+        # if self.DEBUG:
+        #     print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
 
         self.__out.write( venue_id \
                     +"\t"+str(venue_lat) \
