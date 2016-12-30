@@ -14,8 +14,9 @@ from urllib.error import URLError
 from pip._vendor.requests.exceptions import HTTPError
 import time
 import requests
-import sys
 import json
+
+from SocialCrawler import HackFoursquare
 
 
 f_client_id = 0
@@ -23,7 +24,7 @@ f_client_secret = 1
 c_index = 0
 
 
-class NewExtractor:
+class HeadLess:
 
     """Read log file from Collector .
     ( or files that contains a swarm url code)
@@ -32,15 +33,14 @@ class NewExtractor:
             If has a another file that was not created by Collector you must
             have set.column parameter with a integer saying the file column that
             has swarm url. All file input must be *.tsv .
-        Args:
-            see def __init__ docstring
+        
     """
 
     def __init__(self,
-                 credentials=None,
-                 foursquare_version="20140806%20",
-                 foursquare_mode="swarm",
-                 debug_mode=False
+                 developer_email=None,
+                 developer_password=None,
+                 mode="show",
+                 debug=False
                  ):
         """Class constructor.
         
@@ -54,61 +54,30 @@ class NewExtractor:
             To see how can get crendetials see https://developer.foursquare.com/overview/auth
         
         Args:
-            (obsolete)foursquare_client_id (str): Foursquare's app client id
-            (obsolete)foursquare_client_secret (str): Foursquare's app client secret
-            credentials: Array that contains foursquare_credentials
             foursquare_version (str): kind of Foursquare returns, by default "20140806%20" .
             foursquare_mode (str): foursquare mode answer. Valid value: "swarm"  or "foursquare" by default "swarm"
-            (obsolete)developer_email (None, optional): Description
-            (obsolete) developer_password (str) : password of email
+            developer_email (None, optional): Description
+            developer_password (str) : password of email
         
         Attributes:
-            credentials: Array that contains foursquare_credentials
-            (obsolete)foursquare_client_id (str): Foursquare's app client id
-            (obsolete)foursquare_client_secret (str): Foursquare's app client secret
             foursquare_version (str): kind of Foursquare returns
             foursquare_mode (str): foursquare mode answer
                                     valid value: "swarm"  or "foursquare"
-            (obsolete)developer_email (str): email registed in developer foursquare web site
-            (obsolete) developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
+            developer_email (str): email registed in developer foursquare web site
+            developer_password (str) : if developer_email is passed this field must be too, otherwise will be ignored.
         
-        Deleted Parameters:
-            (optional)developer_email (str): email registed in developer foursquare web site
         """
-        self.DEBUG = debug_mode
-        if self.DEBUG:
-            print("[CREDENTIAL] Contain %s credentials" %len(credentials),flush=True)
-
-        if len(credentials) == 0:
-            print(colored('[INVALID PARAMETER] credentials must be setted.','red'),flush=True)
-            sys.exit()
+        self.DEBUG = debug
+        
         foursquare_mode_valid_value = {'swarm','foursquare'}
         
-
-        if( foursquare_mode not in foursquare_mode_valid_value ):
-            print(colored('[INVALID PARAMETER] foursquare_mode.','red'),flush=True)
-            sys.exit()
-
-        self._credentials = credentials
-        self._foursquare_version = foursquare_version
-        self._foursquare_mode = foursquare_mode
+        if ( developer_email is not None and developer_password is not None ):
+        #     self.hacking_enable = True
+            self._hacking = HackFoursquare.Hacking(developer_email, developer_password,mode)
+            self._hacking.open_browser()
         
-        print(colored("[SETUP] OKAY",'green'),flush=True)
-
-
-    def get_next_credential(self):
-        global c_index
-        result = False
-        if(c_index < (len(self._credentials)-1)):
-            c_index +=1
-            print(colored('GET ANOTHER CREDENTIAL','green'),flush=True)
-            print(colored("\tCREDENTIAL [" +str(c_index)+"]",'green'))
-            print(colored("\t\t[CLIENT ID] "+str(self._credentials[c_index][f_client_id]),'green'))
-            print(colored("\t\t[SECRET ID] "+str(self._credentials[c_index][f_client_secret]),'green'))
-            result = True
-        else:
-            c_index = 0
-        return result
+        if self.DEBUG:
+            print("[HEADLESS] Setup okay",flush=True)
 
     def settings(self,mode=None,out_file_name=None,out_path_file=None,column=4,input_file=None):
         """Class constructor.
@@ -173,7 +142,7 @@ class NewExtractor:
             print(colored('One or more attributes are None. Firstly you must call settings method and than you call this method ','red'),flush=True)
             sys.exit()
 
-        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','a')
+        self.__out = open( self._path_file + '/' + self._file_name + '.tsv','w')
         
         #set file header
         self.__out.write( 'checkin_createdAt' \
@@ -197,15 +166,19 @@ class NewExtractor:
         number_line = 0
         for line in open(self._input_file, 'r'):
             number_line = number_line + 1
-         
+            # print("File opened",flush=True)
+            # print(line,flush=True)
+            # try:
             venue_id = self.get_swarm_data(line,number_line)
             if venue_id is "NONE":
+                # print("ERROR SWARM DATA",flush=True)
                 print(colored("[SWARM RESOLVE ID]ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
                 continue
             r = self.get_4square_data(venue_id)
             if(r is False):
+                # print("ERROR 4SQUARE DATA",flush=True)
                 print(colored("[VENUE DATA] ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
@@ -232,13 +205,15 @@ class NewExtractor:
         try:
             # print('Looking for t.co ...',flush=True)
             t_co_url = line_splitted[self._column]
+            
+            
             idx = t_co_url.index('https://t.co/')#get where start the url
             t_co_url = t_co_url[idx:idx+23]
             
             if self.DEBUG:
                 print(colored('\n\nFound t.co ' +  t_co_url,'green'),flush=True)
                 print(colored('Trying resolve '+t_co_url,'green'),flush=True)
-
+            
             swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
 
         except HTTPError as e:
@@ -269,7 +244,8 @@ class NewExtractor:
             print(e,flush=True)
             return "NONE"
         except :
-            print(colored(' URLLIB ERROR','red'),flush=True)
+            # print(colored(' URLLIB ERROR','red'),flush=True)
+            print("[CONNECTION][UNKOWN ERROR] " + str(sys.exc_info()[0]) )
             return "NONE"
 
         if self.DEBUG:
@@ -279,9 +255,10 @@ class NewExtractor:
             print(swarm_t_co_resolved.url,flush=True)
             print(colored('SWARM URL ERROR','red') ,flush=True)
             return "NONE"
-        
+
         if self.DEBUG:
             print(colored("[SWARM] LINK RESOLVED "+swarm_t_co_resolved.url ,'green'),flush=True)
+            # print("resolved sucessfully. Link resolved is "+swarm_t_co_resolved.url ,flush=True)
         
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
         
@@ -294,34 +271,24 @@ class NewExtractor:
         while api_rate_limit:
             api_rate_limit = False
             try:
-                response = requests.get( self.url_resolveID + key + 
-                                          '&client_id=' + self._credentials[c_index][f_client_id] +
-                                          '&client_secret=' + self._credentials[c_index][f_client_secret] +
-                                          '&v=' + self._foursquare_version +
-                                          '&m=' + self._foursquare_mode )
+                response = self._hacking.get_info_detail(v="swarm",key_id=key)
+                # print(response)
+                swarm_data = json.loads(response)
+                # swarm_data = response.json()
 
-                swarm_data = response.json()
-                # print(swarm_data)
             except HTTPError as e:
                 # print(colored('HTTPERROR ','red'),flush=True)
-                print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'),flush=True)
+                print(colored('[CHECK RESOLVE ID] ERROR ','red'),flush=True)
                 print(colored(e,'red'),flush=True)
                 
             except :
-                result = self.get_next_credential()
-                print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'),flush=True)
-                print("[API FOURSQUARE RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]) )
-                if(result is False):
-                    # print(colored('Wait 5 minutes to request again ','red'),flush=True)
-                    print(colored('[API FOURSQUARE RESOLVE ID] SLEEP FOR 5 MIN ','red'),flush=True)
-                    time.sleep(300) #sleep 5 min
-                    print(colored('[API FOURSQUARE RESOLVE ID] I AM BACK ','red'),flush=True)
-                    # api_rate_limit = True
-                else:
-                    # print(colored('[API FOURSQUARE RESOLVE ID] GET ANOTHER CREDENTIAL ','red'),flush=True)
-                    print(colored('[API FOURSQUARE RESOLVE ID] TRYING REQUEST THE LAST URL','red'),flush=True)
+                
+                print(colored('[BROWSER][RESOLVE ID] SLEEP FOR 5 SECONDS ','red'),flush=True)
+                # self._hacking.debug()
+                self._hacking.rebuild()
+                time.sleep(5)
+                print(colored('[BROWSER][RESOLVE ID] I AM BACK ','red'),flush=True)
                 api_rate_limit = True
-
 
         try:
             checkin_user_id=swarm_data['response']['checkin']['user']['id']
@@ -332,11 +299,11 @@ class NewExtractor:
         try:
             checkin_user_gender=swarm_data['response']['checkin']['user']['gender']
         except:
-            print(colored('SWARM CHECKIN ERROR [PARSER GENDER]','red'),flush=True)
+            print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_GENDER]','red'),flush=True)
             checkin_user_gender = "NULL"
             
-        # if self.DEBUG:
-        #     print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
+        if self.DEBUG:
+            print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
 
         self.__out.write( line_splitted[3] \
                     +"\t"+str(line_splitted[1]) \
@@ -346,18 +313,18 @@ class NewExtractor:
                     +"\t")
         self.__out.flush()
 
-        swarm_data_venue_id = "NONE"
+        swarm_data_venue_id = "None"
+        # if swarm_data['meta']['code'] == 200:
         try:
-            # print(colored("",'red'))
-            if self.DEBUG:
-                print(colored("[SWARM] SAVED DATA.\n[VENUE DETAIL] RETRIEVING",'green'),flush=True)
+            # print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
+            # if self.DEBUG:
+            print(colored("[SWARM] SAVED DATA.\n[VENUE DETAIL] RETRIEVING",'green'),flush=True)
             swarm_data_venue_id = swarm_data['response']['checkin']['venue']['id']
-
+            return swarm_data_venue_id
         except:
-            print(colored("[SWARM] WITHOUT DATA OR VENUE ID",'red'))
-            swarm_data_venue_id = "NONE"
+            print("[BROWSER][RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]) )
 
-        return swarm_data_venue_id
+            return "NONE"
 
     def get_4square_data(self, venue_id=None):
         """Method to retrieve venue information
@@ -377,47 +344,23 @@ class NewExtractor:
 
         while api_venue_rate_limit:
             api_venue_rate_limit = False
-            # venue_data = []
+            venue_data = "NONE"
             try:
-                
-                response = requests.get(self.url_venue \
-                                        + venue_id \
-                                        + '?client_id=' \
-                                        + self._credentials[c_index][f_client_id] \
-                                        + '&client_secret=' \
-                                        + self._credentials[c_index][f_client_secret] \
-                                        + '&v=' \
-                                        + self._foursquare_version \
-                                        )
-                venue_data = response.json()
+                response = self._hacking.get_info_detail(v="v",key_id=venue_id)
+                venue_data = json.loads(response)
 
             except HTTPError as e:
                 print(colored('[HTTP ERROR] VENUE DETAIL ','red'),flush=True)
                 print(colored(e,'red'),flush=True)
                 # return False
             except :
-                c_id = str(self._credentials[c_index][f_client_id])
-                s_id = str(self._credentials[c_index][f_client_secret])
-
-                # print(self.url_venue + venue_id +'?client_id=' + str(c_id) )
-                print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
-                print(colored("[VENUE DETAIL][UNKOWN ERROR] " + str(sys.exc_info()[0]),'red') )
-                result = self.get_next_credential()
-
-                if(result is False):
-                    # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
-                    print(colored('[VENUE DETAIL] SLEEP FOR 5 MIN','red'),flush=True)
-                    time.sleep(300) #sleep 5 minutes
-                    print(colored('[VENUE DETAIL] I AM BACK','red'),flush=True)
-                    # api_venue_rate_limit =  True
-                else:
-                    # print(colored('[VENUE DETAIL] GET ANOTHER CREDENTIAL','red'),flush=True)
-                    print(colored('[VENUE DETAIL] TRYING REQUEST THE LAST URL','red'),flush=True)
-
+                
+                print(colored('[BROWSER][VENUE DETAIL] RATE LIMIT','red'),flush=True)
+                print(colored('[BROWSER][VENUE DETAIL] SLEEP FOR 5 SECONDS','red'),flush=True)
+                
+                self._hacking.rebuild()
                 api_venue_rate_limit =  True
-
-                # return False
-
+                
 
         try:
             venue_lat = venue_data['response']['venue']['location']['lat']
@@ -464,8 +407,8 @@ class NewExtractor:
         except:
             venue_parent_categories_id = "NULL"
 
-        if self.DEBUG:
-            print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
+        # if self.DEBUG:
+        #     print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
 
         self.__out.write( venue_id \
                     +"\t"+str(venue_lat) \

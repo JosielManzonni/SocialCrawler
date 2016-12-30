@@ -47,6 +47,12 @@ As shown in Stream Overview
 
 **See Wiki!**
 
+- **v 0.1.0**
+    - fixed module class declaration
+
+- **v 0.0.9**
+    - fixed syntax erro and hacking method dir output
+
 - **v 0.0.8**
     - added selenium as requirements to use foursquare browser request (to avoid rate limit), **can not work**
     - updated ExtractorData to a full version to allow get (almost) full VENUE info (NewExtractorData)
