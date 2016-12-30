@@ -227,23 +227,24 @@ class HeadLess:
             print(e,flush=True)
             return "NONE"
         except ConnectionResetError as e:
-            print(colored(' CONNECTION RESET ERROR ','red'),flush=True)
+            print(colored(' [CONNECTION] RESET ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except ConnectionError as e:
-            print(colored(' CONNECTION ERROR ','red'),flush=True)
+            print(colored(' [CONNECTION] ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except ConnectionAbortedError as e:
-            print(colored(' CONNECTION ABORTED ERROR ','red'),flush=True)
+            print(colored(' [CONNECTION] ABORTED ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except ConnectionRefusedError as e:
-            print(colored(' CONNECTION REFUSED ERROR ','red'),flush=True)
+            print(colored(' [CONNECTION] REFUSED ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except :
-            print(colored(' URLLIB ERROR','red'),flush=True)
+            # print(colored(' URLLIB ERROR','red'),flush=True)
+            print("[CONNECTION][UNKOWN ERROR] " + str(sys.exc_info()[0]) )
             return "NONE"
 
         if self.DEBUG:
@@ -280,11 +281,11 @@ class HeadLess:
                 
             except :
                 
-                print(colored('[BROWSER FAIL] SLEEP FOR 5 SECONDS ','red'),flush=True)
+                print(colored('[BROWSER][RESOLVE ID] SLEEP FOR 5 SECONDS ','red'),flush=True)
                 # self._hacking.debug()
                 self._hacking.rebuild()
                 time.sleep(5)
-                print(colored('[BROWSER FAIL] I AM BACK ','red'),flush=True)
+                print(colored('[BROWSER][RESOLVE ID] I AM BACK ','red'),flush=True)
                 api_rate_limit = True
 
         try:
@@ -296,7 +297,7 @@ class HeadLess:
         try:
             checkin_user_gender=swarm_data['response']['checkin']['user']['gender']
         except:
-            print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'),flush=True)
+            print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_GENDER]','red'),flush=True)
             checkin_user_gender = "NULL"
             
         if self.DEBUG:
@@ -317,6 +318,8 @@ class HeadLess:
             swarm_data_venue_id = swarm_data['response']['checkin']['venue']['id']
             return swarm_data_venue_id
         except:
+            print("[BROWSER][RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]) )
+
             return "NONE"
 
     def get_4square_data(self, venue_id=None):
@@ -347,7 +350,7 @@ class HeadLess:
                 print(colored(e,'red'),flush=True)
                 # return False
             except :
-                print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
+                print(colored('[BROWSER][VENUE DETAIL] RATE LIMIT','red'),flush=True)
                 # if self.hacking_enable==True:
                 #     print(colored('STARTING HACKING BROWSER','green'),flush=True)
                 #     response = self._hacking.get_venue_detail(venue_id)
@@ -358,7 +361,7 @@ class HeadLess:
                 # result = self.get_next_credential()
                 # if(result is False):
                 #     # print(colored('Wait one 5 minutes to request again ','red'),flush=True)
-                print(colored('[VENUE DETAIL] SLEEP FOR 5 SECONDS','red'),flush=True)
+                print(colored('[BROWSER][VENUE DETAIL] SLEEP FOR 5 SECONDS','red'),flush=True)
                 
                 # self._hacking.debug()
                 self._hacking.rebuild()
