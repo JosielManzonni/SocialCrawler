@@ -348,7 +348,7 @@ class NewExtractor:
 
         print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
         
-        swarm_data =[]
+        # swarm_data =[]
         try:
             # print(colored("",'red'))
             swarm_data['response']['checkin']['venue']['id']
