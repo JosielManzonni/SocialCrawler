@@ -347,7 +347,17 @@ class NewExtractor:
         self.__out.flush()
 
         print("Saved swarm data. Going to retrieve Foursquare data.",flush=True)
-        return swarm_data['response']['checkin']['venue']['id']
+        
+        swarm_data =[]
+        try:
+            # print(colored("",'red'))
+            swarm_data['response']['checkin']['venue']['id']
+
+        except:
+            print(colored("[SWARM] WITHOUT ID",'red'))
+            swarm_data = "NONE"
+
+        return swarm_data
 
     def get_4square_data(self, venue_id=None):
         """Method to retrieve venue information
