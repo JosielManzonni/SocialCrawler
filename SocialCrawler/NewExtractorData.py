@@ -12,6 +12,8 @@ import sys
 import urllib.request
 from urllib.error import URLError
 from pip._vendor.requests.exceptions import HTTPError
+from SocialCrawler import HTTPResponseError
+
 import time
 import requests
 import sys
@@ -77,7 +79,7 @@ class NewExtractor:
         """
         self.DEBUG = debug_mode
         if self.DEBUG:
-            print("[CREDENTIAL] Contain %s credentials" %len(credentials),flush=True)
+            print(colored("[CREDENTIAL] Contain %s credentials" %len(credentials),'green'),flush=True)
 
         if len(credentials) == 0:
             print(colored('[INVALID PARAMETER] credentials must be setted.','red'),flush=True)
@@ -301,7 +303,25 @@ class NewExtractor:
                                           '&m=' + self._foursquare_mode )
 
                 swarm_data = response.json()
-                # print(swarm_data)
+                
+
+                if str(swarm_data['meta']['code']) != str(200): #if get some error code
+                    try:
+                        error_code = swarm_data['meta']['code']
+                    except:
+                        error_code = "NULL"
+                    try:
+                        error_code = swarm_data['meta']['errorType']
+                    except:
+                        error_type = "NULL"
+
+                    if HTTPResponseError.parse_error(error_code, error_type):
+                        raise Exception('[request meta code]')
+
+                    continue
+
+
+                
             except HTTPError as e:
                 # print(colored('HTTPERROR ','red'),flush=True)
                 print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'),flush=True)
@@ -310,7 +330,7 @@ class NewExtractor:
             except :
                 result = self.get_next_credential()
                 print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'),flush=True)
-                print("[API FOURSQUARE RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]) )
+                print(colored("[API FOURSQUARE RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
                 if(result is False):
                     # print(colored('Wait 5 minutes to request again ','red'),flush=True)
                     print(colored('[API FOURSQUARE RESOLVE ID] SLEEP FOR 5 MIN ','red'),flush=True)
@@ -326,8 +346,11 @@ class NewExtractor:
         try:
             checkin_user_id=swarm_data['response']['checkin']['user']['id']
         except:
-            print(colored('SWARM CHECKIN ERROR [PARSER CHECKIN_ID]','red'),flush=True)
+            print(colored('SWARM CHECKIN ERROR [PARSER USER_ID]','red'),flush=True)
             checkin_user_id = "NULL"
+            if self.DEBUG:
+                print("\n\n"+swarm_data+"\n\n",flush=True)
+                # sys.exit()
             
         try:
             checkin_user_gender=swarm_data['response']['checkin']['user']['gender']
@@ -399,7 +422,8 @@ class NewExtractor:
                 c_id = str(self._credentials[c_index][f_client_id])
                 s_id = str(self._credentials[c_index][f_client_secret])
 
-                # print(self.url_venue + venue_id +'?client_id=' + str(c_id) )
+                if self.DEBUG:
+                    print(self.url_venue + venue_id +'?client_id=' + str(c_id) )
                 print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
                 print(colored("[VENUE DETAIL][UNKOWN ERROR] " + str(sys.exc_info()[0]),'red') )
                 result = self.get_next_credential()

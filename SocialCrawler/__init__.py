@@ -12,15 +12,19 @@ This modules import all classes from SocialCrawler package.
 
 from . import HistoricalCollector
 from . import ExtractorData
-
+from . import NewExtractorData
+from . import HeadLess
+from . import HackFoursquare
+from . import HTTPResponseError
 # from  . import ExtractorData
 
-__version__ = "0.3.2"
+__version__ = "0.3.2.1"
 
 __all__ = [	
 			"HistoricalCollector",
 			"ExtractorData",
 			"HackFoursquare",
 			"NewExtractorData",
-			"HeadLess"
+			"HeadLess",
+			"HTTPResponseError"
 		]
