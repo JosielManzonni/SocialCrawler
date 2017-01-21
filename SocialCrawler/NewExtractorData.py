@@ -217,7 +217,7 @@ class NewExtractor:
          
             venue_id = self.get_swarm_data(line,number_line)
             if venue_id is "NONE":
-                print(colored("[SWARM RESOLVE ID]ERROR DATA",'red'),flush=True)
+                print(colored("[SWARM RESOLVE ID] ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
                 continue
@@ -246,53 +246,67 @@ class NewExtractor:
         # print("SWARM ",flush=True)
         line_splitted = file_line.split('\t')
         swarm_t_co_resolved = "NONE"
-        try:
-            # print('Looking for t.co ...',flush=True)
-            t_co_url = line_splitted[self._column]
-            idx = t_co_url.index('https://t.co/')#get where start the url
-            t_co_url = t_co_url[idx:idx+23]
-            
-            if self.DEBUG:
-                print(colored('\n\nFound t.co ' +  t_co_url,'green'),flush=True)
-                print(colored('Trying resolve '+t_co_url,'green'),flush=True)
 
-            swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
+        try_again = True
+        while try_again:
+            try_again = False
+            try:
+                # print('Looking for t.co ...',flush=True)
+                t_co_url = line_splitted[self._column]
+                idx = t_co_url.index('https://t.co/')#get where start the url
+                t_co_url = t_co_url[idx:idx+23]
+                
+                if self.DEBUG:
+                    print(colored('\n\nFound t.co ' +  t_co_url,'green'),flush=True)
+                    print(colored('Trying resolve '+t_co_url,'green'),flush=True)
 
-        #be careful
-        #HTTPError must come first see more https://docs.python.org/3.1/howto/urllib2.html#number-1
-        except HTTPError as e:
-                print(colored('[HTTP ERROR] ERROR CODE %s' %e.code,'red'),flush=True)
-        except ValueError as e:
-            print(colored('[VALUE ERROR] SWARM SHORT URL ERROR ','red'),flush=True)
-            print(e,flush=True)
-            return "NONE"
+                swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
 
-        except URLError as e:
-            print(colored('URL ERROR ','red'),flush=True)
-            print(e.reason,flush=True)
-            return "NONE"
-        except ConnectionResetError as e:
-            print(colored('[CONNECTION] RESET ERROR ','red'),flush=True)
-            print(e,flush=True)
-            return "NONE"
-        except ConnectionError as e:
-            print(colored('[CONNECTION] ERROR ','red'),flush=True)
-            print(e,flush=True)
-            return "NONE"
-        except ConnectionAbortedError as e:
-            print(colored('[CONNECTION] ABORTED ERROR ','red'),flush=True)
-            print(e,flush=True)
-            return "NONE"
-        except ConnectionRefusedError as e:
-            print(colored('[CONNECTION] REFUSED ERROR ','red'),flush=True)
-            print(e,flush=True)
-            return "NONE"
-        except KeyboardInterrupt:
-            print(colored('[KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
-            sys.exit()
-        except :
-            print(colored('URLLIB ERROR','red'),flush=True)
-            return "NONE"
+            #be careful
+            #HTTPError must come first see more https://docs.python.org/3.1/howto/urllib2.html#number-1
+            except HTTPError as e:
+                    print(colored('[HTTP ERROR] ERROR CODE %s' %e.code,'red'),flush=True)
+            except ValueError as e:
+                print(colored('[VALUE ERROR] SWARM SHORT URL ERROR ','red'),flush=True)
+                print(colored(e,"red"),flush=True)
+                return "NONE"
+            except ConnectionResetError as e:
+                print(colored('[CONNECTION] RESET ERROR ','red'),flush=True)
+                print(colored(e,"red"),flush=True)
+                return "NONE"
+            except ConnectionError as e:
+                print(colored('[CONNECTION] ERROR ','red'),flush=True)
+                print(colored(e,"red"),flush=True)
+                return "NONE"
+            except ConnectionAbortedError as e:
+                print(colored('[CONNECTION] ABORTED ERROR ','red'),flush=True)
+                print(colored(e,"red"),flush=True)
+                return "NONE"
+            except ConnectionRefusedError as e:
+                print(colored('[CONNECTION] REFUSED ERROR ','red'),flush=True)
+                print(colored(e,"red"),flush=True)
+                return "NONE"
+            except KeyboardInterrupt:
+                print(colored('[KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
+                sys.exit()
+            except URLError as e:
+                print(colored('[URL ERROR] ','red'),flush=True)
+                # print("INFOS REASON "+ colored(e.reason.args[0],"red"),flush=True)
+                errno_code = e.reason.args[0]
+
+                if errno_code == -3:
+                    print(colored("[CONNECTION DISABLED] MAYBE YOUR ADPTER IS OFF ","red"),flush=True)
+                    try_again = True
+                elif errno_code == 111:
+                    print(colored("[CONNECTION REFUSED] CHECK YOUR CONNECTION ","red"),flush=True)
+                    try_again = True
+                else:
+                    return "NONE"
+                time.sleep(5)#wait 5 second
+                
+            except :
+                print(colored("[URL LIB][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
+                return "NONE"
 
         if self.DEBUG:
             print(colored("SWARM SOLVED",'green'),flush=True)
@@ -345,7 +359,7 @@ class NewExtractor:
             except HTTPError as e:
                 # print(colored('HTTPERROR ','red'),flush=True)
                 print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'),flush=True)
-                print(colored(e,'red'),flush=True)
+                print(colored(e.code,'red'),flush=True)
                 
             except :
                 result = self.get_next_credential()
