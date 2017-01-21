@@ -14,7 +14,7 @@ from urllib.error import URLError, HTTPError
 
 # from pip._vendor.requests.exceptions import HTTPError
 from SocialCrawler import HTTPResponseError
-
+from socket import timeout
 import time
 import requests
 import sys
@@ -217,13 +217,13 @@ class NewExtractor:
          
             venue_id = self.get_swarm_data(line,number_line)
             if venue_id is "NONE":
-                print(colored("[SWARM RESOLVE ID] ERROR DATA",'red'),flush=True)
+                print(colored("[SWARM] ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
                 continue
             r = self.get_4square_data(venue_id)
             if(r is False):
-                print(colored("[VENUE DATA] ERROR DATA",'red'),flush=True)
+                print(colored("[VENUE] ERROR DATA",'red'),flush=True)
                 self.__out.write("\n")
                 self.__out.flush()
 
@@ -260,7 +260,9 @@ class NewExtractor:
                     print(colored('\n\nFound t.co ' +  t_co_url,'green'),flush=True)
                     print(colored('Trying resolve '+t_co_url,'green'),flush=True)
 
-                swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
+                # swarm_t_co_resolved = requests.get(t_co_url)
+                swarm_t_co_resolved = urllib.request.urlopen(t_co_url,timeout=5)
+
 
             #be careful
             #HTTPError must come first see more https://docs.python.org/3.1/howto/urllib2.html#number-1
@@ -287,7 +289,7 @@ class NewExtractor:
                 print(colored(e,"red"),flush=True)
                 return "NONE"
             except KeyboardInterrupt:
-                print(colored('[KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
+                print(colored('[SWARM][KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
                 sys.exit()
             except URLError as e:
                 print(colored('[URL ERROR] ','red'),flush=True)
@@ -296,7 +298,7 @@ class NewExtractor:
                 errno_code = e.reason.args[0]
 
                 if errno_code == -3:
-                    print(colored("[CONNECTION DISABLED] MAYBE YOUR ADPTER IS OFF ","red"),flush=True)
+                    print(colored("[CONNECTION DISABLED] MAYBE YOUR ADAPTER IS OFF ","red"),flush=True)
                     try_again = True
                 elif errno_code == 111:
                     print(colored("[CONNECTION REFUSED] CHECK YOUR CONNECTION ","red"),flush=True)
@@ -309,8 +311,10 @@ class NewExtractor:
                 print(colored("[URL LIB][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
                 return "NONE"
 
+        print(colored("REQUEST OKAY!","green"),flush=True)
+
         if self.DEBUG:
-            print(colored("SWARM SOLVED",'green'),flush=True)
+            print(colored("SWARM LINK SOLVED",'green'),flush=True)
 
         if self.swarm_prefix not in swarm_t_co_resolved.url:
             print(swarm_t_co_resolved.url,flush=True)
@@ -361,7 +365,10 @@ class NewExtractor:
                 # print(colored('HTTPERROR ','red'),flush=True)
                 print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'),flush=True)
                 print(colored(e.code,'red'),flush=True)
-                
+
+            except KeyboardInterrupt:
+                print(colored('[API FOURSQUARE][KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
+                sys.exit()
             except :
                 result = self.get_next_credential()
                 print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'),flush=True)
@@ -395,7 +402,7 @@ class NewExtractor:
             
         # if self.DEBUG:
         #     print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
-
+        print(colored("[SWARM DATA] WRITING IN THE FILE!","green"),flush=True)
         self.__out.write( line_splitted[3] \
                     +"\t"+str(line_splitted[1]) \
                     +"\t"+str(checkin_user_id) \
@@ -525,6 +532,7 @@ class NewExtractor:
 
         if self.DEBUG:
             print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
+            print(colored("[VENUE DETAIL] SAVED DATA",flush=True))
 
         self.__out.write( venue_id \
                     +"\t"+str(venue_lat) \
