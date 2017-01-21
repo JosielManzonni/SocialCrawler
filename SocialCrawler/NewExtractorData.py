@@ -78,14 +78,23 @@ class NewExtractor:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
         self.DEBUG = debug_mode
-        if self.DEBUG:
-            print(colored("[CREDENTIAL] Contain %s credentials" %len(credentials),'green'),flush=True)
-
         if len(credentials) == 0:
             print(colored('[INVALID PARAMETER] credentials must be setted.','red'),flush=True)
             sys.exit()
-        foursquare_mode_valid_value = {'swarm','foursquare'}
         
+
+        if self.DEBUG:
+            global c_index
+            global f_client_id
+            global f_client_secret
+
+            print(colored("[CREDENTIAL] Contain %s credentials" %len(credentials),'green'),flush=True)
+            print(colored('GET FIRST CREDENTIAL','green'),flush=True)
+            print(colored("\tCREDENTIAL [" +str(c_index)+"]",'green'),flush=True)
+            print(colored("\t\t[CLIENT ID] "+str(self._credentials[c_index][f_client_id]),'green'),flush=True)
+            print(colored("\t\t[SECRET ID] "+str(self._credentials[c_index][f_client_secret]),'green'),flush=True)
+
+        foursquare_mode_valid_value = {'swarm','foursquare'}
 
         if( foursquare_mode not in foursquare_mode_valid_value ):
             print(colored('[INVALID PARAMETER] foursquare_mode.','red'),flush=True)
@@ -109,9 +118,9 @@ class NewExtractor:
         if(c_index < (len(self._credentials)-1)):
             c_index +=1
             print(colored('GET ANOTHER CREDENTIAL','green'),flush=True)
-            print(colored("\tCREDENTIAL [" +str(c_index)+"]",'green'))
-            print(colored("\t\t[CLIENT ID] "+str(self._credentials[c_index][f_client_id]),'green'))
-            print(colored("\t\t[SECRET ID] "+str(self._credentials[c_index][f_client_secret]),'green'))
+            print(colored("\tCREDENTIAL [" +str(c_index)+"]",'green'),flush=True)
+            print(colored("\t\t[CLIENT ID] "+str(self._credentials[c_index][f_client_id]),'green'),flush=True)
+            print(colored("\t\t[SECRET ID] "+str(self._credentials[c_index][f_client_secret]),'green'),flush=True)
             result = True
         else:
             c_index = 0
@@ -275,6 +284,8 @@ class NewExtractor:
             print(colored(' [CONNECTION] REFUSED ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
+        except KeyboardInterrupt:
+            print(colored(' [KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
         except :
             print(colored(' URLLIB ERROR','red'),flush=True)
             return "NONE"
