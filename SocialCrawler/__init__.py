@@ -9,6 +9,8 @@ This modules import all classes from SocialCrawler package.
 
 """
 
+from colorama import init #do termcolor work in Windows
+init()
 
 from . import HistoricalCollector
 from . import ExtractorData
@@ -18,7 +20,8 @@ from . import HackFoursquare
 from . import HTTPResponseError
 # from  . import ExtractorData
 
-__version__ = "0.3.2.1"
+
+__version__ = "0.3.3"
 
 __all__ = [	
 			"HistoricalCollector",
