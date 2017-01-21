@@ -9,7 +9,7 @@ This file take all message error from response and translate to
 human version
 
 more information: https://developer.foursquare.com/overview/responses
-
+				  https://docs.python.org/3.1/howto/urllib2.html
 
 """
 
