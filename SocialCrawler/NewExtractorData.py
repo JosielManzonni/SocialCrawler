@@ -10,8 +10,9 @@
 from termcolor import colored
 import sys
 import urllib.request
-from urllib.error import URLError
-from pip._vendor.requests.exceptions import HTTPError
+from urllib.error import URLError, HTTPError
+
+# from pip._vendor.requests.exceptions import HTTPError
 from SocialCrawler import HTTPResponseError
 
 import time
@@ -82,6 +83,7 @@ class NewExtractor:
             print(colored('[INVALID PARAMETER] credentials must be setted.','red'),flush=True)
             sys.exit()
         
+        self._credentials = credentials
 
         if self.DEBUG:
             global c_index
@@ -100,7 +102,6 @@ class NewExtractor:
             print(colored('[INVALID PARAMETER] foursquare_mode.','red'),flush=True)
             sys.exit()
 
-        self._credentials = credentials
         self._foursquare_version = foursquare_version
         self._foursquare_mode = foursquare_mode
         
@@ -257,37 +258,40 @@ class NewExtractor:
 
             swarm_t_co_resolved = urllib.request.urlopen(t_co_url)
 
+        #be careful
+        #HTTPError must come first see more https://docs.python.org/3.1/howto/urllib2.html#number-1
         except HTTPError as e:
-                print(colored('URLLIB URLOPEN FAILED ERROR CODE %s' %e.code,'red'),flush=True)
+                print(colored('[HTTP ERROR] ERROR CODE %s' %e.code,'red'),flush=True)
         except ValueError as e:
-            print(colored(' SWARM SHORT URL ERROR ','red'),flush=True)
+            print(colored('[VALUE ERROR] SWARM SHORT URL ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
 
         except URLError as e:
-            print(colored(' URL ERROR ','red'),flush=True)
-            print(e,flush=True)
+            print(colored('URL ERROR ','red'),flush=True)
+            print(e.reason,flush=True)
             return "NONE"
         except ConnectionResetError as e:
-            print(colored(' [CONNECTION] RESET ERROR ','red'),flush=True)
+            print(colored('[CONNECTION] RESET ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except ConnectionError as e:
-            print(colored(' [CONNECTION] ERROR ','red'),flush=True)
+            print(colored('[CONNECTION] ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except ConnectionAbortedError as e:
-            print(colored(' [CONNECTION] ABORTED ERROR ','red'),flush=True)
+            print(colored('[CONNECTION] ABORTED ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except ConnectionRefusedError as e:
-            print(colored(' [CONNECTION] REFUSED ERROR ','red'),flush=True)
+            print(colored('[CONNECTION] REFUSED ERROR ','red'),flush=True)
             print(e,flush=True)
             return "NONE"
         except KeyboardInterrupt:
-            print(colored(' [KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
+            print(colored('[KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
+            sys.exit()
         except :
-            print(colored(' URLLIB ERROR','red'),flush=True)
+            print(colored('URLLIB ERROR','red'),flush=True)
             return "NONE"
 
         if self.DEBUG:
