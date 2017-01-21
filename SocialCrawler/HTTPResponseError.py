@@ -1,4 +1,4 @@
-ERROR_TYPE_400 = "# -*- coding: UTF-8 -*-"
+# -*- coding: UTF-8 -*-"
 """Extractor class to retrieve data from Foursquare.
 
 # (c) J.Wirlino and A.Adativa
