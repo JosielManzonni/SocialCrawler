@@ -22,6 +22,7 @@ from . import HTTPResponseError
 
 
 __version__ = "0.3.3"
+__author__ = "A.Adativa and J.Wirlino"
 
 __all__ = [	
 			"HistoricalCollector",
