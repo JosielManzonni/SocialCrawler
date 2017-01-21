@@ -99,8 +99,13 @@ class NewExtractor:
 
 
     def get_next_credential(self):
+        
         global c_index
+        global f_client_id
+        global f_client_secret
+
         result = False
+        
         if(c_index < (len(self._credentials)-1)):
             c_index +=1
             print(colored('GET ANOTHER CREDENTIAL','green'),flush=True)
