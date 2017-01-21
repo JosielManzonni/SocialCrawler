@@ -291,6 +291,7 @@ class NewExtractor:
                 sys.exit()
             except URLError as e:
                 print(colored('[URL ERROR] ','red'),flush=True)
+                print(colored(e.reason,'red'),flush=True)
                 # print("INFOS REASON "+ colored(e.reason.args[0],"red"),flush=True)
                 errno_code = e.reason.args[0]
 
