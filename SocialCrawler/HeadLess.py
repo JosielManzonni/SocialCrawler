@@ -233,7 +233,7 @@ class HeadLess:
             return "NONE"
         except ConnectionError as e:
             print(colored(' [CONNECTION] ERROR ','red'),flush=True)
-            print(e,flush=True)
+            print(e,flu
             return "NONE"
         except ConnectionAbortedError as e:
             print(colored(' [CONNECTION] ABORTED ERROR ','red'),flush=True)
