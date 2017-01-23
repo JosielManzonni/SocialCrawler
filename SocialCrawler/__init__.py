@@ -9,8 +9,8 @@ This modules import all classes from SocialCrawler package.
 
 """
 
-from colorama import init #do termcolor work in Windows
-init()
+# from colorama import init #do termcolor work in Windows
+# init()
 
 from . import HistoricalCollector
 from . import ExtractorData
