@@ -269,6 +269,7 @@ class NewExtractor:
             #HTTPError must come first see more https://docs.python.org/3.1/howto/urllib2.html#number-1
             except HTTPError as e:
                 print(colored('[HTTP ERROR] ERROR CODE %s' %e.code,'red'),flush=True)
+                return "NONE"
             except ValueError as e:
                 print(colored('[VALUE ERROR] SWARM SHORT URL ERROR ','red'),flush=True)
                 print(colored(e,"red"),flush=True)
