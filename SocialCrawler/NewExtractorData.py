@@ -257,17 +257,18 @@ class NewExtractor:
                 t_co_url = t_co_url[idx:idx+23]
                 
                 if self.DEBUG:
-                    print(colored('\n\nFound t.co ' +  t_co_url,'green'),flush=True)
-                    print(colored('Trying resolve '+t_co_url,'green'),flush=True)
+                    print(colored('\n\nFound and trying resolve ' +  t_co_url,'green'),flush=True)
+                    # print(colored('Trying resolve '+t_co_url,'green'),flush=True)
 
                 # swarm_t_co_resolved = requests.get(t_co_url)
+                print(colored("Requesting..."),flush=True)
                 swarm_t_co_resolved = urllib.request.urlopen(t_co_url,timeout=5)
 
 
             #be careful
             #HTTPError must come first see more https://docs.python.org/3.1/howto/urllib2.html#number-1
             except HTTPError as e:
-                    print(colored('[HTTP ERROR] ERROR CODE %s' %e.code,'red'),flush=True)
+                print(colored('[HTTP ERROR] ERROR CODE %s' %e.code,'red'),flush=True)
             except ValueError as e:
                 print(colored('[VALUE ERROR] SWARM SHORT URL ERROR ','red'),flush=True)
                 print(colored(e,"red"),flush=True)
@@ -355,12 +356,9 @@ class NewExtractor:
                         error_type = "NULL"
 
                     if HTTPResponseError.parse_error(error_code, error_type):
+                        print(colored("[HTTPResponseError] Get some error","red"),flush=True)
                         raise Exception('[request meta code]')
-
-                    continue
-
-
-                
+                    # continue
             except HTTPError as e:
                 # print(colored('HTTPERROR ','red'),flush=True)
                 print(colored('[FOURSQUARE RESOLVE ID] ERROR ','red'),flush=True)
@@ -532,7 +530,7 @@ class NewExtractor:
 
         if self.DEBUG:
             print(self._path_file + '/' + self._file_name + '.tsv',flush=True)
-            print(colored("[VENUE DETAIL] SAVED DATA",flush=True))
+            print(colored("[VENUE DETAIL] SAVED DATA","green"),flush=True)
 
         self.__out.write( venue_id \
                     +"\t"+str(venue_lat) \
