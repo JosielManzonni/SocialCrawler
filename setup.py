@@ -32,6 +32,7 @@ setup( name=NAME,
 					  'termcolor',
 					  'selenium',
 					  'requests>=2.4.3',
+					  'colorama',
 					  ],
 	classifiers=[
 				'Intended Audience :: Developers',
