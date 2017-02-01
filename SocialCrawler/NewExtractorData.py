@@ -21,9 +21,7 @@ import sys
 import json
 
 
-f_client_id = 0
-f_client_secret = 1
-c_index = 0
+
 
 
 class NewExtractor:
@@ -78,6 +76,9 @@ class NewExtractor:
         Deleted Parameters:
             (optional)developer_email (str): email registed in developer foursquare web site
         """
+        self.f_client_id = 0
+        self.f_client_secret = 1
+        self.c_index = 0
         self.DEBUG = debug_mode
         if len(credentials) == 0:
             print(colored('[INVALID PARAMETER] credentials must be setted.','red'),flush=True)
@@ -86,15 +87,13 @@ class NewExtractor:
         self._credentials = credentials
 
         if self.DEBUG:
-            global c_index
-            global f_client_id
-            global f_client_secret
+           
 
             print(colored("[CREDENTIAL] Contain %s credentials" %len(credentials),'green'),flush=True)
             print(colored('GET FIRST CREDENTIAL','green'),flush=True)
-            print(colored("\tCREDENTIAL [" +str(c_index)+"]",'green'),flush=True)
-            print(colored("\t\t[CLIENT ID] "+str(self._credentials[c_index][f_client_id]),'green'),flush=True)
-            print(colored("\t\t[SECRET ID] "+str(self._credentials[c_index][f_client_secret]),'green'),flush=True)
+            print(colored("\tCREDENTIAL [" +str(self.c_index)+"]",'green'),flush=True)
+            print(colored("\t\t[CLIENT ID] "+str(self._credentials[self.c_index][self.f_client_id]),'green'),flush=True)
+            print(colored("\t\t[SECRET ID] "+str(self._credentials[self.c_index][self.f_client_secret]),'green'),flush=True)
 
         foursquare_mode_valid_value = {'swarm','foursquare'}
 
@@ -110,21 +109,21 @@ class NewExtractor:
 
     def get_next_credential(self):
         
-        global c_index
-        global f_client_id
-        global f_client_secret
+        
+        
+        
 
         result = False
         
-        if(c_index < (len(self._credentials)-1)):
-            c_index +=1
+        if(self.c_index < (len(self._credentials)-1)):
+            self.c_index +=1
             print(colored('GET ANOTHER CREDENTIAL','green'),flush=True)
-            print(colored("\tCREDENTIAL [" +str(c_index)+"]",'green'),flush=True)
-            print(colored("\t\t[CLIENT ID] "+str(self._credentials[c_index][f_client_id]),'green'),flush=True)
-            print(colored("\t\t[SECRET ID] "+str(self._credentials[c_index][f_client_secret]),'green'),flush=True)
+            print(colored("\tCREDENTIAL [" +str(self.c_index)+"]",'green'),flush=True)
+            print(colored("\t\t[CLIENT ID] "+str(self._credentials[self.c_index][self.f_client_id]),'green'),flush=True)
+            print(colored("\t\t[SECRET ID] "+str(self._credentials[self.c_index][self.f_client_secret]),'green'),flush=True)
             result = True
         else:
-            c_index = 0
+            self.c_index = 0
         return result
 
     def settings(self,mode=None,out_file_name=None,out_path_file=None,column=4,input_file=None):
@@ -328,9 +327,9 @@ class NewExtractor:
         
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
         
-        global f_client_id
-        global f_client_secret
-        global c_index
+        
+        
+        
 
         api_rate_limit = True
         
@@ -338,8 +337,8 @@ class NewExtractor:
             api_rate_limit = False
             try:
                 response = requests.get( self.url_resolveID + key + 
-                                          '&client_id=' + self._credentials[c_index][f_client_id] +
-                                          '&client_secret=' + self._credentials[c_index][f_client_secret] +
+                                          '&client_id=' + self._credentials[self.c_index][self.f_client_id] +
+                                          '&client_secret=' + self._credentials[self.c_index][self.f_client_secret] +
                                           '&v=' + self._foursquare_version +
                                           '&m=' + self._foursquare_mode )
 
@@ -435,9 +434,7 @@ class NewExtractor:
         """
         api_venue_rate_limit = True
         
-        global f_client_id
-        global f_client_secret
-        global c_index
+        
 
         while api_venue_rate_limit:
             api_venue_rate_limit = False
@@ -447,9 +444,9 @@ class NewExtractor:
                 response = requests.get(self.url_venue \
                                         + venue_id \
                                         + '?client_id=' \
-                                        + self._credentials[c_index][f_client_id] \
+                                        + self._credentials[self.c_index][self.f_client_id] \
                                         + '&client_secret=' \
-                                        + self._credentials[c_index][f_client_secret] \
+                                        + self._credentials[self.c_index][self.f_client_secret] \
                                         + '&v=' \
                                         + self._foursquare_version \
                                         )
@@ -458,10 +455,16 @@ class NewExtractor:
             except HTTPError as e:
                 print(colored('[HTTP ERROR] VENUE DETAIL ','red'),flush=True)
                 print(colored(e,'red'),flush=True)
+                api_venue_rate_limit = False
                 # return False
+            except UnboundLocalError as e:
+                print(colored('[UNBOUND]','red'),flush=True)
+                print(colored(e,'red'),flush=True)
+                api_venue_rate_limit = False
+
             except :
-                c_id = str(self._credentials[c_index][f_client_id])
-                s_id = str(self._credentials[c_index][f_client_secret])
+                c_id = str(self._credentials[self.c_index][self.f_client_id])
+                s_id = str(self._credentials[self.c_index][self.f_client_secret])
 
                 if self.DEBUG:
                     print(self.url_venue + venue_id +'?client_id=' + str(c_id) )
