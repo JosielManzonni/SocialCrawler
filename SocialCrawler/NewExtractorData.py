@@ -11,7 +11,7 @@ from termcolor import colored
 import sys
 import urllib.request
 from urllib.error import URLError, HTTPError
-
+import linecache
 # from pip._vendor.requests.exceptions import HTTPError
 from SocialCrawler import HTTPResponseError
 from socket import timeout
@@ -231,6 +231,15 @@ class NewExtractor:
             #     continue
         self.__out.close()
 
+    def ExceptionDetail(self):
+         exc_type, exc_obj, exc_tb = sys.exc_info()
+        f= exc_tb.tb_frame
+        lineno = exc_tb.tb_lineno
+        filename = f.f_code.co_filename
+        linecache.checkcache(filename)
+        line = linecache.getline(filename, lineno, f.f_globals)
+        print ('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj) )
+
     def get_swarm_data(self,file_line=None,number_line=None,):
         """Method to get swarm data from a t.co url
         Args:
@@ -310,6 +319,7 @@ class NewExtractor:
                 
             except :
                 print(colored("[URL LIB][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
+                ExceptionDetail()
                 return "NONE"
 
         print(colored("REQUEST OKAY!","green"),flush=True)
@@ -326,14 +336,10 @@ class NewExtractor:
             print(colored("[SWARM] LINK RESOLVED "+swarm_t_co_resolved.url ,'green'),flush=True)
         
         key =  swarm_t_co_resolved.url[ len(swarm_t_co_resolved.url) - 11 : ] #get string after www.swarmapp.com/
-        
-        
-        
-        
 
         api_rate_limit = True
-        
-        while api_rate_limit:
+        watch_dog_while = 0
+        while api_rate_limit and watch_dog_while < 5 :
             api_rate_limit = False
             try:
                 response = requests.get( self.url_resolveID + key + 
@@ -367,10 +373,16 @@ class NewExtractor:
             except KeyboardInterrupt:
                 print(colored('[API FOURSQUARE][KEYBOARD] INTERRUPTED BY USER ','red'),flush=True)
                 sys.exit()
-            except :
+            except Exception as e :
+
                 result = self.get_next_credential()
                 print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'),flush=True)
                 print(colored("[API FOURSQUARE RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
+                
+                ExceptionDetail()
+
+                watch_dog_while +=1
+
                 if(result is False):
                     # print(colored('Wait 5 minutes to request again ','red'),flush=True)
                     print(colored('[API FOURSQUARE RESOLVE ID] SLEEP FOR 5 MIN ','red'),flush=True)
@@ -468,8 +480,11 @@ class NewExtractor:
 
                 if self.DEBUG:
                     print(self.url_venue + venue_id +'?client_id=' + str(c_id) )
+
                 print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
                 print(colored("[VENUE DETAIL][UNKOWN ERROR] " + str(sys.exc_info()[0]),'red') )
+                ExceptionDetail()
+                
                 result = self.get_next_credential()
 
                 if(result is False):
