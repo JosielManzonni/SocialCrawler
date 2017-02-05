@@ -269,7 +269,7 @@ class NewExtractor:
                     # print(colored('Trying resolve '+t_co_url,'green'),flush=True)
 
                 # swarm_t_co_resolved = requests.get(t_co_url)
-                print(colored("Requesting..."),flush=True)
+                print(colored("Requesting...","green"),flush=True)
                 swarm_t_co_resolved = urllib.request.urlopen(t_co_url,timeout=5)
 
 
@@ -402,7 +402,9 @@ class NewExtractor:
             print(colored('SWARM CHECKIN ERROR [PARSER USER_ID]','red'),flush=True)
             checkin_user_id = "NULL"
             if self.DEBUG:
-                print("\n\n"+swarm_data+"\n\n",flush=True)
+                print("\n\n")
+                print(swarm_data)
+                print("\n\n")
                 # sys.exit()
             
         try:

@@ -21,7 +21,7 @@ from . import HTTPResponseError
 # from  . import ExtractorData
 
 
-__version__ = "0.3.3.7"
+__version__ = "0.3.4"
 __author__ = "A.Adativa and J.Wirlino"
 
 __all__ = [	
