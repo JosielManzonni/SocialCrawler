@@ -319,7 +319,7 @@ class NewExtractor:
                 
             except :
                 print(colored("[URL LIB][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
-                ExceptionDetail()
+                self.ExceptionDetail()
                 return "NONE"
 
         print(colored("REQUEST OKAY!","green"),flush=True)
@@ -350,7 +350,8 @@ class NewExtractor:
 
                 swarm_data = response.json()
                 
-
+                error_type = error_code = "NULL"
+                
                 if str(swarm_data['meta']['code']) != str(200): #if get some error code
                     try:
                         error_code = swarm_data['meta']['code']
@@ -379,7 +380,7 @@ class NewExtractor:
                 print(colored('[API FOURSQUARE RESOLVE ID] RATE LIMIT ','red'),flush=True)
                 print(colored("[API FOURSQUARE RESOLVE ID][UNKOWN ERROR] " + str(sys.exc_info()[0]),"red") )
                 
-                ExceptionDetail()
+                self.ExceptionDetail()
 
                 watch_dog_while +=1
 
@@ -394,7 +395,7 @@ class NewExtractor:
                     print(colored('[API FOURSQUARE RESOLVE ID] TRYING REQUEST THE LAST URL','red'),flush=True)
                 api_rate_limit = True
 
-
+        watch_dog_while = 0
         try:
             checkin_user_id=swarm_data['response']['checkin']['user']['id']
         except:
@@ -483,7 +484,7 @@ class NewExtractor:
 
                 print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
                 print(colored("[VENUE DETAIL][UNKOWN ERROR] " + str(sys.exc_info()[0]),'red') )
-                ExceptionDetail()
+                self.ExceptionDetail()
 
                 result = self.get_next_credential()
 
