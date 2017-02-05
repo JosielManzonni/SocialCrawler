@@ -232,7 +232,7 @@ class NewExtractor:
         self.__out.close()
 
     def ExceptionDetail(self):
-         exc_type, exc_obj, exc_tb = sys.exc_info()
+        exc_type, exc_obj, exc_tb = sys.exc_info()
         f= exc_tb.tb_frame
         lineno = exc_tb.tb_lineno
         filename = f.f_code.co_filename
@@ -484,7 +484,7 @@ class NewExtractor:
                 print(colored('[VENUE DETAIL] RATE LIMIT','red'),flush=True)
                 print(colored("[VENUE DETAIL][UNKOWN ERROR] " + str(sys.exc_info()[0]),'red') )
                 ExceptionDetail()
-                
+
                 result = self.get_next_credential()
 
                 if(result is False):
