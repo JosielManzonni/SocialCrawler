@@ -108,11 +108,6 @@ class NewExtractor:
 
 
     def get_next_credential(self):
-        
-        
-        
-        
-
         result = False
         
         if(self.c_index < (len(self._credentials)-1)):
@@ -386,8 +381,8 @@ class NewExtractor:
 
                 if(result is False):
                     # print(colored('Wait 5 minutes to request again ','red'),flush=True)
-                    print(colored('[API FOURSQUARE RESOLVE ID] SLEEP FOR 5 MIN ','red'),flush=True)
-                    time.sleep(300) #sleep 5 min
+                    print(colored('[API FOURSQUARE RESOLVE ID] SLEEP FOR 10 MIN ','red'),flush=True)
+                    time.sleep(600) #sleep 10 min
                     print(colored('[API FOURSQUARE RESOLVE ID] I AM BACK ','red'),flush=True)
                     # api_rate_limit = True
                 else:
@@ -405,6 +400,14 @@ class NewExtractor:
                 print("\n\n")
                 print(swarm_data)
                 print("\n\n")
+            if HTTPResponseError.parse_error(swarm_data['meta']['code'], swarm_data['meta']['errorType']):
+                print(colored("[HTTPResponseError] Get some error","red"),flush=True)
+                result = self.get_next_credential()
+                if(result is False):
+                    time.sleep(600) #without new credential..wiat 10 minutes
+                
+                # raise Exception('[request meta code]')
+
                 # sys.exit()
             
         try:
