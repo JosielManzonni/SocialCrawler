@@ -246,7 +246,8 @@ class NewExtractor:
             venue_id
         
         """
-        # print("SWARM ",flush=True)
+        print("LINE "+str(number_line),flush=True)
+
         line_splitted = file_line.split('\t')
         swarm_t_co_resolved = "NONE"
 
@@ -400,11 +401,12 @@ class NewExtractor:
                 print("\n\n")
                 print(swarm_data)
                 print("\n\n")
-            if HTTPResponseError.parse_error(swarm_data['meta']['code'], swarm_data['meta']['errorType']):
+            if HTTPResponseError.parse_error(swarm_data['meta']['code'], swarm_data['meta']['errorType']) == True:
                 print(colored("[HTTPResponseError] Get some error","red"),flush=True)
-                result = self.get_next_credential()
-                if(result is False):
-                    time.sleep(600) #without new credential..wiat 10 minutes
+            
+            result = self.get_next_credential()
+            if(result is False):
+                time.sleep(600) #without new credential..wiat 10 minutes
                 
                 # raise Exception('[request meta code]')
 

@@ -20,14 +20,11 @@ from termcolor import colored
 CODE_ERROR = [
 				[400,"BAD REQUEST"],
 				[401,"The OAuth token was provided but was invalid."],
-				[403,"The requested information cannot be viewed by the acting user, for example, because they \
-						are not friends with the user whose date they are trying to read."],
+				[403,"The requested information cannot be viewed by the acting user, for example, because they are not friends with the user whose date they are trying to read."],
 				[404,"Endpoint does not exist."],
 				[405,"[METHOD NOT ALLOWED] Attempting to use POST with a GET-only endpoint, or vice-versa."],
-				[409,"[CONFLICT] The request could not be completed as it is. Use the information \
-						 included in the response to modify the request and retry."],
-				[500,"[INTERNAL SERVER ERROR] Foursquare's servers are unhappy. The request is probably \
-					valid but needs to be retried later."]
+				[409,"[CONFLICT] The request could not be completed as it is. Use the information included in the response to modify the request and retry."],
+				[500,"[INTERNAL SERVER ERROR] Foursquare's servers are unhappy. The request is probably valid but needs to be retried later."]
 			]
 
 
@@ -74,11 +71,10 @@ def parse_error(status_code, error_type):
 			print (
 						colored("ERROR TYPE: \t["+str(type_error[error_type_detail]) + "] \nERROR MSG: \t"+type_error[error_type_detail_msg],"red")
 					)
+			ret = True
 			break
-	
-
-	if error_type is "rate_limit_exceeded":
-		ret = True
+	# if error_type is "rate_limit_exceeded":
+	# 	ret = True
 	
 	return ret
 
